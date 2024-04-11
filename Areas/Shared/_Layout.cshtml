@@ -31,7 +31,6 @@
 
 <body class="hold-transition sidebar-mini layout-fixed">
   <div class="wrapper">
-
     <!-- Preloader -->
     <div class="preloader flex-column justify-content-center align-items-center">
       <img class="animation__shake" src="~/lib/Template/dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60"
@@ -120,7 +119,11 @@
     </aside>
 
     <!-- Content Wrapper. Contains page content -->
-    @RenderBody()
+
+    <div class="content-wrapper">
+
+      @RenderBody()
+    </div>
     <!-- /.content-wrapper -->
     <footer class="main-footer">
       <strong>Copyright &copy; 2024 <a asp-area="admin" asp-controller="DashboardAdmin" asp-action="Index">ASP Net

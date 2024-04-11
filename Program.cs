@@ -30,7 +30,6 @@ public class Program
     app.UseRouting();
 
     app.UseAuthorization();
-
     app.MapControllerRoute(
       name: "myareas",
       pattern: "{area:exists}/{controller}/{action}");

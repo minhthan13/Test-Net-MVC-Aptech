@@ -2,4 +2,16 @@
   Layout = "~/Areas/Shared/_Layout.cshtml";
 }
 
-<h1>Ok</h1>
+
+<div class="container-fluid">
+
+  <h1>Dashboard</h1>
+
+  <hr>
+
+  <span>
+    @Context.Session.GetString("username")
+  </span>
+  @TempData["msg"]
+
+</div>

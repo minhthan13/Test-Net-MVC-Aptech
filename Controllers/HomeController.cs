@@ -26,8 +26,19 @@ public class HomeController : Controller
   [Route("Login")]
   public IActionResult Login(string username, string password)
   {
-    if (accountService.Login(username, password)) return RedirectToAction("Index", "DashboardAdmin", new { Area = "Admin" });
-    return View("Login");
+    if (accountService.Login(username, password))
+    {
+
+      TempData["msg"] = "valid !!!";
+
+      HttpContext.Session.SetString("username", username);
+      return RedirectToAction("Index", "DashboardAdmin", new { Area = "Admin" });
+    }
+    else
+    {
+      TempData["msg"] = "invalid";
+      return View("Login");
+    }
 
   }
 
