@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TestNetMVC.Models;
+using TestNetMVC.Services;
 
 
 namespace TestNetMVC;
@@ -18,6 +19,9 @@ public class Program
     {
       option.UseLazyLoadingProxies().UseSqlServer(ConnectString);
     });
+
+
+    builder.Services.AddScoped<AccountService, AccountServiceImpl>();
     var app = builder.Build();
 
     app.UseHttpsRedirection();

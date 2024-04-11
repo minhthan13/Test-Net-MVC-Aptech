@@ -1,34 +1,45 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using TestNetMVC.Services;
 
 
 namespace TestNetMVC.Controllers;
 [Route("home")]
 public class HomeController : Controller
 {
-  private readonly ILogger<HomeController> _logger;
+  private readonly AccountService accountService;
 
 
-
-  public HomeController(ILogger<HomeController> logger)
+  public HomeController(AccountService _accountService)
   {
-    _logger = logger;
-
+    accountService = _accountService;
   }
   [Route("")]
   [Route("~/")]
-  [Route("index")]
-  public IActionResult Index()
-  {
-
-    return View();
-  }
-  [Route("privacy")]
-
-  public IActionResult Privacy()
+  [Route("Login")]
+  public IActionResult Login()
   {
     return View();
   }
+
+  [HttpPost]
+  [Route("Login")]
+  public IActionResult Login(string username, string password)
+  {
+    if (accountService.Login(username, password)) return RedirectToAction("Index", "DashboardAdmin", new { Area = "Admin" });
+    return View("Login");
+
+  }
+
+
+  [Route("Ok")]
+  public IActionResult Ok()
+  {
+    return View();
+  }
+
+
+
 
 
 }
