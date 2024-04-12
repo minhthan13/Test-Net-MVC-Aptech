@@ -1,0 +1,20 @@
+@using TestNetMVC.Services
+@inject AccountService AccountService
+
+
+
+
+
+<div class="input-group-prepend">
+  <label class="input-group-text" for="inputGroupSelect01">Role</label>
+
+  <select class="custom-select" id="inputGroupSelect01">
+
+    <option value="-1" selected>Choose Role</option>
+    @foreach (var role in AccountService.ListRole().Where(r => r.RoleName != "Admin"))
+    {
+      <option value="@role.Id">@role.RoleName</option>
+    }
+
+  </select>
+</div>

@@ -10,5 +10,12 @@ namespace TestNetMVC.Services
   {
     public bool Login(string username, string password);
     public Employee FindByUsername(string username);
+    public List<Employee> FindAll();
+
+    public List<Role> ListRole();
+
+    public string GetRoleNamesByEmployeeId(int employeeId);
+
+
   }
 }

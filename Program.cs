@@ -15,6 +15,8 @@ public class Program
     builder.Services.AddControllersWithViews();
     builder.Services.AddSession();
     var ConnectString = builder.Configuration["ConnectionStrings:DefaultConnection"];
+
+
     builder.Services.AddDbContext<TestnetmvcContext>(option =>
     {
       option.UseLazyLoadingProxies().UseSqlServer(ConnectString);

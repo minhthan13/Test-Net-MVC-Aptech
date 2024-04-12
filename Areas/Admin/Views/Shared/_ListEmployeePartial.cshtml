@@ -1,0 +1,42 @@
+@using TestNetMVC.Services
+@inject AccountService AccountService
+
+@{
+
+  var accounts = AccountService.FindAll();
+  accounts.RemoveAll(x => x.Username == "admin");
+}
+
+<div class="card-body table-responsive p-0">
+  <table class="table table-hover text-nowrap">
+    <thead>
+      <tr>
+        <th>No.</th>
+        <th>Username</th>
+        <th>Fullname</th>
+        <th>Date Of Birth</th>
+        <th>Status</th>
+        <th>Role</th>
+      </tr>
+    </thead>
+    <tbody>
+      @{
+        var i = 1;
+      }
+      @foreach (var a in accounts.OrderBy(a => a.Status))
+      {
+        <tr>
+          <td>@(i++)</td>
+          <td>@a.Username</td>
+          <td>@a.Fullname</td>
+          <td><span class="tag tag-success">@a.Dob.ToString("dd/MM/yyyy")</span></td>
+          <td><i>@(a.Status ? "Active" : "Pending")</i></td>
+          <td>@(AccountService.GetRoleNamesByEmployeeId(a.Id))</td>
+
+        </tr>
+      }
+
+
+    </tbody>
+  </table>
+</div>

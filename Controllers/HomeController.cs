@@ -3,10 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using TestNetMVC.Services;
 
 
+
 namespace TestNetMVC.Controllers;
 [Route("home")]
 public class HomeController : Controller
 {
+
   private readonly AccountService accountService;
 
 
@@ -14,6 +16,7 @@ public class HomeController : Controller
   {
     accountService = _accountService;
   }
+
   [Route("")]
   [Route("~/")]
   [Route("Login")]
@@ -26,13 +29,15 @@ public class HomeController : Controller
   [Route("Login")]
   public IActionResult Login(string username, string password)
   {
+
+
     if (accountService.Login(username, password))
     {
 
       TempData["msg"] = "valid !!!";
 
       HttpContext.Session.SetString("username", username);
-      return RedirectToAction("Index", "DashboardAdmin", new { Area = "Admin" });
+      return RedirectToAction("Dashboard", "Admin", new { Area = "Admin" });
     }
     else
     {
@@ -41,16 +46,6 @@ public class HomeController : Controller
     }
 
   }
-
-
-  [Route("Ok")]
-  public IActionResult Ok()
-  {
-    return View();
-  }
-
-
-
 
 
 }

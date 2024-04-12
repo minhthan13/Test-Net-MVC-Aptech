@@ -1,0 +1,95 @@
+<h1 class="text-center">Employees</h1>
+
+
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <!--ADD NEW EMPLOYEE-->
+
+        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#AddNewEmployee">
+          Add New Employee
+        </button>
+        <div class="modal" tabindex="-1" role="dialog" id="AddNewEmployee">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Add New Employee</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <form method="post" asp-area="Admin" asp-controller="Admin" asp-action="AddNewEmployee">
+                <div class="container-fluid">
+                  <div class="modal-body row d-flex justify-content-between">
+                    <div class="form-group col-5">
+
+                      <label for="username">Username<span class="text-danger">*</span></label>
+                      <input type="text" class="form-control" id="username" placeholder="Username" name="Username">
+                    </div>
+                    <div class="form-group col-5">
+                      <label></label>
+                      <partial name="_ListRolePartial" />
+                    </div>
+
+
+
+                    <div class="form-group col-5">
+                      <label for="password">Password<span class="text-danger">*</span></label>
+                      <input type="password" class="form-control" id="password" placeholder="Password" name="Password">
+                    </div>
+
+
+                    <div class="form-group col-5">
+                      <label for="Fullname">Fullname</label>
+                      <input type="text" class="form-control" id="Fullname" placeholder="Fullname" name="Fullname">
+                    </div>
+
+                    <div class="form-group col-5">
+                      <label for="Cpassword">Confirm Password<span class="text-danger">*</span></label>
+                      <input type="password" class="form-control" id="Cpassword" placeholder="Confirm Password"
+                        name="CPassword">
+                    </div>
+                    <div class="form-group col-5">
+                      <label for="Photo">Photo</label>
+                      <input type="text" class="form-control" id="Photo" placeholder="Photo" name="Photo">
+                    </div>
+
+
+                  </div>
+                  <div class="modal-footer col-12">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                  </div>
+                </div>
+
+              </form>
+            </div>
+          </div>
+        </div>
+
+
+        <!--./// ADD NEW EMPLOYEE-->
+        <!--search Box -->
+        <div class="card-tools">
+          <div class="input-group input-group-sm" style="width: 150px;">
+            <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+
+            <div class="input-group-append">
+              <button type="submit" class="btn btn-default">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <!--search Box -->
+        <!--search Box -->
+
+      </div>
+      <!-- /.card-header -->
+      <partial name="_ListEmployeePartial" />
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+  </div>
+</div>

@@ -30,5 +30,25 @@ namespace TestNetMVC.Services
     {
       return db.Employees.SingleOrDefault(e => e.Username == username);
     }
+
+    public List<Role> ListRole()
+    {
+      return db.Roles.ToList();
+    }
+
+    public string GetRoleNamesByEmployeeId(int employeeId)
+    {
+      var roleName = db.Employees
+            .Where(e => e.Id == employeeId)
+            .Select(e => e.Roles.FirstOrDefault().RoleName)
+            .FirstOrDefault();
+
+      return roleName;
+    }
+
+    public List<Employee> FindAll()
+    {
+      return db.Employees.ToList();
+    }
   }
 }
