@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using TestNetMVC.Helpers;
+using TestNetMVC.Models;
 using TestNetMVC.Services;
 
 namespace TestNetMVC.Areas.Admin.Controllers
@@ -16,9 +18,11 @@ namespace TestNetMVC.Areas.Admin.Controllers
   {
 
     private readonly AccountService accountService;
-    public AdminController(AccountService _accountService)
+    private readonly IWebHostEnvironment environment;
+    public AdminController(AccountService _accountService, IWebHostEnvironment _environment)
     {
       accountService = _accountService;
+      environment = _environment;
     }
 
     [Route("Dashboard")]
@@ -32,6 +36,41 @@ namespace TestNetMVC.Areas.Admin.Controllers
     public IActionResult Employees()
     {
       return View("Employees");
+    }
+
+    [HttpPost]
+    [Route("AddNewEmployee")]
+    public IActionResult AddNewEmployee(Employee employee, int RoleId, IFormFile Photo)
+    {
+
+
+      var fileName = FileHelper.generateFileName(Photo.FileName);
+      var path = Path.Combine(environment.WebRootPath, "images", fileName);
+      using (var fileStream = new FileStream(path, FileMode.Create))
+      {
+        Photo.CopyTo(fileStream);
+      };
+      if (employee.Dob != null) employee.Dob = DateTime.Now;
+      employee.Password = BCrypt.Net.BCrypt.HashPassword(employee.Password);
+      employee.Status = false;
+      employee.Photo = fileName;
+
+      if (accountService.AddNewEmployee(employee, RoleId))
+      {
+        TempData["msg"] = "Add Employee success !!!";
+        return RedirectToAction("Employees");
+      }
+      else
+      {
+        TempData["msg"] = "Add Employee Failed !!!";
+        return RedirectToAction("Employees");
+
+      }
+
+
+
+
+
     }
 
   }

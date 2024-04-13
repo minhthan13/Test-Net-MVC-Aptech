@@ -17,5 +17,8 @@ namespace TestNetMVC.Services
     public string GetRoleNamesByEmployeeId(int employeeId);
 
 
+    public bool AddNewEmployee(Employee employee, int RoleId);
+
+
   }
 }

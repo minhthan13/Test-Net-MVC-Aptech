@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using TestNetMVC.Models;
 
 namespace TestNetMVC.Services
@@ -49,6 +50,30 @@ namespace TestNetMVC.Services
     public List<Employee> FindAll()
     {
       return db.Employees.ToList();
+    }
+
+    public bool AddNewEmployee(Employee employee, int RoleId)
+    {
+      try
+      {
+        // Thêm Employee vào DbContext
+        db.Employees.Add(employee);
+        db.SaveChanges();
+        var newEmpl = FindByUsername(employee.Username);
+
+        db.Database.ExecuteSqlRaw(
+            "INSERT INTO EmployeeRole (employeeId, roleId) VALUES ({0}, {1})",
+            newEmpl.Id, RoleId);
+
+        return db.SaveChanges() > 0;
+
+      }
+      catch
+      {
+        return false;
+      }
+
+
     }
   }
 }
