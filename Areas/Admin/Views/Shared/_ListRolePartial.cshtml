@@ -1,5 +1,5 @@
 @using TestNetMVC.Services
-@inject AccountService AccountService
+@inject RoleService RoleService
 
 
 
@@ -9,10 +9,9 @@
 
   <select class="custom-select" id="inputGroupSelect01" name="RoleId">
     <option value="-1" selected>Choose Role</option>
-    @foreach (var role in AccountService.ListRole().Where(r => r.RoleName != "Admin"))
+    @foreach (var role in RoleService.FindAll().Where(r => r.RoleName != "Admin"))
     {
       <option value="@role.Id">@role.RoleName</option>
     }
-
   </select>
 </div>

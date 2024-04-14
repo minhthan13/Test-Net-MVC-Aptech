@@ -24,6 +24,7 @@ public class Program
 
 
     builder.Services.AddScoped<AccountService, AccountServiceImpl>();
+    builder.Services.AddScoped<RoleService, RoleServiceImpl>();
     var app = builder.Build();
 
     app.UseHttpsRedirection();

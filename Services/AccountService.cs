@@ -12,12 +12,7 @@ namespace TestNetMVC.Services
     public Employee FindByUsername(string username);
     public List<Employee> FindAll();
 
-    public List<Role> ListRole();
-
-    public string GetRoleNamesByEmployeeId(int employeeId);
-
-
-    public bool AddNewEmployee(Employee employee, int RoleId);
+    public bool AddNewEmployee(Employee employee);
 
 
   }

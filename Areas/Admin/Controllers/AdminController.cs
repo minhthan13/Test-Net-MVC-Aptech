@@ -18,11 +18,13 @@ namespace TestNetMVC.Areas.Admin.Controllers
   {
 
     private readonly AccountService accountService;
+    private readonly RoleService roleService;
     private readonly IWebHostEnvironment environment;
-    public AdminController(AccountService _accountService, IWebHostEnvironment _environment)
+    public AdminController(AccountService _accountService, RoleService _roleService, IWebHostEnvironment _environment)
     {
       accountService = _accountService;
       environment = _environment;
+      roleService = _roleService;
     }
 
     [Route("Dashboard")]
@@ -42,8 +44,6 @@ namespace TestNetMVC.Areas.Admin.Controllers
     [Route("AddNewEmployee")]
     public IActionResult AddNewEmployee(Employee employee, int RoleId, IFormFile Photo)
     {
-
-
       var fileName = FileHelper.generateFileName(Photo.FileName);
       var path = Path.Combine(environment.WebRootPath, "images", fileName);
       using (var fileStream = new FileStream(path, FileMode.Create))
@@ -54,8 +54,9 @@ namespace TestNetMVC.Areas.Admin.Controllers
       employee.Password = BCrypt.Net.BCrypt.HashPassword(employee.Password);
       employee.Status = false;
       employee.Photo = fileName;
+      employee.Roles.Add(roleService.FindById(RoleId));
 
-      if (accountService.AddNewEmployee(employee, RoleId))
+      if (accountService.AddNewEmployee(employee))
       {
         TempData["msg"] = "Add Employee success !!!";
         return RedirectToAction("Employees");

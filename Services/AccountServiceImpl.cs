@@ -32,39 +32,18 @@ namespace TestNetMVC.Services
       return db.Employees.SingleOrDefault(e => e.Username == username);
     }
 
-    public List<Role> ListRole()
-    {
-      return db.Roles.ToList();
-    }
-
-    public string GetRoleNamesByEmployeeId(int employeeId)
-    {
-      var roleName = db.Employees
-            .Where(e => e.Id == employeeId)
-            .Select(e => e.Roles.FirstOrDefault().RoleName)
-            .FirstOrDefault();
-
-      return roleName;
-    }
 
     public List<Employee> FindAll()
     {
       return db.Employees.ToList();
     }
 
-    public bool AddNewEmployee(Employee employee, int RoleId)
+    public bool AddNewEmployee(Employee employee)
     {
       try
       {
-        // Thêm Employee vào DbContext
+
         db.Employees.Add(employee);
-        db.SaveChanges();
-        var newEmpl = FindByUsername(employee.Username);
-
-        db.Database.ExecuteSqlRaw(
-            "INSERT INTO EmployeeRole (employeeId, roleId) VALUES ({0}, {1})",
-            newEmpl.Id, RoleId);
-
         return db.SaveChanges() > 0;
 
       }
@@ -75,5 +54,7 @@ namespace TestNetMVC.Services
 
 
     }
+
+
   }
 }

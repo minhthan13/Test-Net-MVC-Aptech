@@ -5,9 +5,33 @@
 
   var accounts = AccountService.FindAll();
   accounts.RemoveAll(x => x.Username == "admin");
-}
 
+}
+<div class="card-header">
+  <!--ADD NEW EMPLOYEE-->
+  <button type="button" class="btn btn-info" data-toggle="modal" data-target="#AddNewEmployee">
+    Add New Employee
+  </button>
+  <partial name="_AddNewEmployeeModal">
+    <!--./// ADD NEW EMPLOYEE-->
+    <!--search Box -->
+    <div class="card-tools">
+      <div class="input-group input-group-sm" style="width: 150px;">
+        <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+
+        <div class="input-group-append">
+          <button type="submit" class="btn btn-default">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <!--search Box -->
+    <!--search Box -->
+</div>
 <div class="card-body table-responsive p-0">
+
+
   <table class="table table-hover text-nowrap">
     <thead>
       <tr>
@@ -25,18 +49,62 @@
       }
       @foreach (var a in accounts.OrderBy(a => a.Status))
       {
-        <tr>
+        <tr class="rowdata" data-toggle="modal" data-target="#EmployeeInfoModal" data-employee-username="@a.Username">
           <td>@(i++)</td>
           <td>@a.Username</td>
           <td>@a.Fullname</td>
           <td><span class="tag tag-success">@a.Dob.ToString("dd/MM/yyyy")</span></td>
           <td><i>@(a.Status ? "Active" : "Pending")</i></td>
-          <td>@(AccountService.GetRoleNamesByEmployeeId(a.Id))</td>
-
+          @foreach (var role in a.Roles)
+          {
+            <td>@role.RoleName</td>
+          }
         </tr>
       }
-
-
     </tbody>
   </table>
+</div>
+
+
+
+<script src="~/lib/Template/plugins/jquery/jquery-3.7.1.min.js"></script>
+
+<script>
+  $(document).ready(function () {
+    $('.rowdata').click(function () {
+      var employeeUsername = $(this).data('employee-username');
+      // Sử dụng Ajax để gửi employeeUsername 
+      $.ajax({
+        type: 'GET',
+        url: '/ajax/findEmplpoyeeByUsername',
+        data: { username: employeeUsername },
+        success: function (response) {
+          $('.username').html(response.username)
+          console.log(response);
+        }
+
+      });
+    });
+  });
+</script>
+
+<div class="modal fade" id="EmployeeInfoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title " id="exampleModalLongTitle">
+          request list of <b class="username"></b></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        employee id >>> <span class="username"></span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
 </div>

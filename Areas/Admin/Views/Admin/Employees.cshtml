@@ -1,113 +1,10 @@
-@model TestNetMVC.Models.Employee
-
 <h1 class="text-center">Employees</h1>
 
 
 <div class="row">
   <div class="col-12">
     <div class="card">
-      <div class="card-header">
-        <!--ADD NEW EMPLOYEE-->
 
-        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#AddNewEmployee">
-          Add New Employee
-        </button>
-        <div class="modal" tabindex="-1" role="dialog" id="AddNewEmployee">
-          <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title">Add New Employee</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <form method="post" asp-area="Admin" asp-controller="Admin" asp-action="AddNewEmployee"
-                enctype="multipart/form-data">
-                <div class="container-fluid">
-                  <div class="modal-body row d-flex justify-content-between">
-                    <div class="form-group col-5">
-
-                      <label for="username">Username<span class="text-danger">*</span></label>
-                      <input type="text" class="form-control" id="username" placeholder="Username" asp-for="Username">
-                    </div>
-                    <div class="form-group col-5">
-                      <label></label>
-                      <partial name="_ListRolePartial" />
-                    </div>
-
-
-
-                    <div class="form-group col-5">
-                      <label for="password">Password<span class="text-danger">*</span></label>
-                      <input type="password" class="form-control" id="password" placeholder="Password"
-                        asp-for="Password">
-                    </div>
-
-
-                    <div class="form-group col-5">
-                      <label for="Fullname">Fullname</label>
-                      <input type="text" class="form-control" id="Fullname" placeholder="Fullname" asp-for="Fullname">
-                    </div>
-
-                    <div class="form-group col-5">
-                      <label for="Cpassword">Confirm Password<span class="text-danger">*</span></label>
-                      <input type="password" class="form-control" id="Cpassword" placeholder="Confirm Password"
-                        name="CPassword">
-                    </div>
-                    <div class="form-group col-5">
-                      <span>Photo</span>
-                      <label for="Photo">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
-                          style="width: 1.5rem; height: 1.5rem;">
-                          <path
-                            d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM232 344V280H168c-13.3 0-24-10.7-24-24s10.7-24 24-24h64V168c0-13.3 10.7-24 24-24s24 10.7 24 24v64h64c13.3 0 24 10.7 24 24s-10.7 24-24 24H280v64c0 13.3-10.7 24-24 24s-24-10.7-24-24z" />
-                        </svg>
-                      </label>
-                      <input type="file" id="Photo" name="Photo" hidden onchange="previewImage(this)">
-                    </div>
-                    <div class="form-group col-5">
-                      <label for="Birthday">Birthday</label>
-                      <input type="date" class="form-control" id="Birthday" placeholder="Birthday" asp-for="Dob">
-                    </div>
-
-                    <div class="form-group col-5 d-flex justify-content-start">
-                      <label style="width: 150px;height: 150px;" class="border" id="previewImage">
-
-                      </label>
-                    </div>
-
-
-
-                  </div>
-                  <div class="modal-footer col-12">
-                    <button type="submit" class="btn btn-primary">Save</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                  </div>
-                </div>
-
-              </form>
-            </div>
-          </div>
-        </div>
-
-
-        <!--./// ADD NEW EMPLOYEE-->
-        <!--search Box -->
-        <div class="card-tools">
-          <div class="input-group input-group-sm" style="width: 150px;">
-            <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
-
-            <div class="input-group-append">
-              <button type="submit" class="btn btn-default">
-                <i class="fas fa-search"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-        <!--search Box -->
-        <!--search Box -->
-
-      </div>
       <!-- /.card-header -->
       <partial name="_ListEmployeePartial" />
       <!-- /.card-body -->
@@ -115,25 +12,3 @@
     <!-- /.card -->
   </div>
 </div>
-
-
-<script>
-
-  let fileUpload = null;
-  function previewImage(input) {
-    if (input.files && input.files[0]) {
-      var reader = new FileReader();
-      fileUpload = input.files;
-      reader.onload = function (e) {
-        document.getElementById('previewImage').innerHTML = '<img src="' + e.target.result + '" width="150" height="150">';
-      }
-
-      reader.readAsDataURL(input.files[0]); // Đọc dữ liệu từ file và chuyển đổi thành URL dạng base64
-    } else {
-      input.files = fileUpload;
-    }
-  }
-
-
-
-</script>
