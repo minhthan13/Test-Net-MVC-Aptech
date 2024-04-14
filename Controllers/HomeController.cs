@@ -1,4 +1,7 @@
 using System.Diagnostics;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using TestNetMVC.Services;
 
@@ -27,17 +30,32 @@ public class HomeController : Controller
 
   [HttpPost]
   [Route("Login")]
-  public IActionResult Login(string username, string password)
+  public async Task<IActionResult> Login(string username, string password)
   {
 
 
     if (accountService.Login(username, password))
     {
-
-      TempData["msg"] = "valid !!!";
-
-      HttpContext.Session.SetString("username", username);
-      return RedirectToAction("Dashboard", "Admin", new { Area = "Admin" });
+      var account = accountService.FindByUsername(username);
+      var claims = new List<Claim>();
+      claims.Add(new Claim(ClaimTypes.Name, username));
+      foreach (var role in account.Roles)
+      {
+        claims.Add(new Claim(ClaimTypes.Role, role.RoleName));
+      }
+      var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+      var claimsPrincial = new ClaimsPrincipal(claimsIdentity);
+      await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincial);
+      switch (account.Roles.First().RoleName)
+      {
+        case "Admin":
+          return RedirectToAction("Dashboard", "Admin", new { Area = "Admin" });
+        case "Staff":
+          return RedirectToAction("EmployeeRequest", "Employees", new { Area = "Employees" });
+        case "Support Staff":
+        default:
+          return RedirectToAction("Dashboard", "Admin", new { Area = "Admin" });
+      }
     }
     else
     {
@@ -48,4 +66,12 @@ public class HomeController : Controller
   }
 
 
+
+  [Route("logout")]
+  public async Task<IActionResult> Logout()
+  {
+
+    await HttpContext.SignOutAsync();
+    return RedirectToAction("login");
+  }
 }

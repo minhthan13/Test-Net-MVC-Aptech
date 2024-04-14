@@ -1,8 +1,11 @@
+@using System.Security.Claims
+
 <h1 class="text-center">Dashboard</h1>
 
 <hr>
 
 <span>
-  @Context.Session.GetString("username")
+  <h1>
+    @User.FindFirst(ClaimTypes.Name).Value
+  </h1>
 </span>
-@TempData["msg"]

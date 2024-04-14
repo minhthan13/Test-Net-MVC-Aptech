@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using TestNetMVC.Models;
 using TestNetMVC.Services;
@@ -25,8 +26,21 @@ public class Program
 
     builder.Services.AddScoped<AccountService, AccountServiceImpl>();
     builder.Services.AddScoped<RoleService, RoleServiceImpl>();
-    var app = builder.Build();
+    builder.Services.AddScoped<RequestService, RequestServiceImpl>();
+    builder.Services.AddScoped<PriorityService, PriorityServiceImpl>();
 
+    // cau hinh security
+    builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(option =>
+            {
+              option.LoginPath = "/home/login";
+              // option.AccessDeniedPath = "/account/accessdenied";
+            });
+
+
+    var app = builder.Build();
+    app.UseAuthentication();
+    app.UseAuthorization();
     app.UseHttpsRedirection();
     app.UseStaticFiles();
     app.UseSession();

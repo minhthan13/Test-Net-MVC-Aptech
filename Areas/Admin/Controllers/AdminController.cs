@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using TestNetMVC.Helpers;
@@ -11,6 +12,7 @@ using TestNetMVC.Services;
 
 namespace TestNetMVC.Areas.Admin.Controllers
 {
+  [Authorize(Roles = "Admin")]
 
   [Area("Admin")]
   [Route("Admin")]
@@ -67,12 +69,14 @@ namespace TestNetMVC.Areas.Admin.Controllers
         return RedirectToAction("Employees");
 
       }
-
-
-
-
-
     }
+
+    [Route("Requests")]
+    public IActionResult Requests()
+    {
+      return View("Requests");
+    }
+
 
   }
 }
