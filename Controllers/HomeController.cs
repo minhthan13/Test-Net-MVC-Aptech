@@ -53,9 +53,9 @@ public class HomeController : Controller
       switch (roleName)
       {
         case "Admin":
-          return RedirectToAction("Dashboard", "Admin");
+          return RedirectToAction("Dashboard", "Admin", new { Areas = "Admin" });
         case "Staff":
-          return RedirectToAction("Dashboard", "Employees");
+          return RedirectToAction("Dashboard", "Employees", new { Areas = "Employees" });
       }
       return RedirectToAction("Dashboard");
 

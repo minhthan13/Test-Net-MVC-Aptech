@@ -16,6 +16,7 @@ namespace TestNetMVC.Areas.Employees.Controllers
   [Authorize(Roles = "Staff")]
   [Area("Employees")]
   [Route("Employees")]
+  [Route("Employees/Employees")]
   public class EmployeesController : Controller
   {
     private readonly RequestService requestService;
@@ -28,41 +29,36 @@ namespace TestNetMVC.Areas.Employees.Controllers
     [Route("Dashboard")]
     public IActionResult Dashboard()
     {
-
       return ViewComponent("Dashboard");
     }
-    [Route("")]
-    [Route("EmployeeRequest")]
-    public IActionResult EmployeeRequest()
+
+    [Route("EmployeesRequest")]
+    [Route("EmployeesRequest/{page?}")]
+    public IActionResult EmployeesRequest(int? page)
     {
+      if (page == null)
+      {
+        page = 1;
+      }
       var username = User.FindFirst(ClaimTypes.Name).Value;
       var user = accountService.FindByUsername(username);
-      return ViewComponent("ListRequest", user.Id);
+      return ViewComponent("ListRequest", new { EmployeeId = user.Id, page });
     }
 
 
     [HttpPost]
     [Route("AddNewRequest")]
-    public IActionResult AddNewRequest(string Title, string Description, int EmployeeIdSubmit, int PriorityId)
+    public IActionResult AddNewRequest(Request request)
     {
-      var request = new Request()
-      {
-        Title = Title,
-        Description = Description,
-        EmployeeIdSubmit = EmployeeIdSubmit,
-        PriorityId = PriorityId,
-        SentDate = DateTime.Now,
-        EmployeeIdHandling = null
-      };
-
-
+      request.SentDate = DateTime.Now;
       if (requestService.AddNewRequest(request))
       {
-        return RedirectToAction("EmployeeRequest");
+        return RedirectToAction("EmployeesRequest");
       }
-
-      return RedirectToAction("EmployeeRequest");
-
+      else
+      {
+        return RedirectToAction("EmployeesRequest");
+      }
 
 
     }

@@ -17,7 +17,7 @@ public partial class Request
   public string Title { get; set; } = null!;
 
   [StringLength(255)]
-  public string? Description { get; set; }
+  public string Description { get; set; }
 
   public DateTime SentDate { get; set; }
 

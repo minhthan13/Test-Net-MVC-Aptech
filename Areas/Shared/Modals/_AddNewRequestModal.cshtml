@@ -1,3 +1,12 @@
+@using TestNetMVC.Services
+@inject AccountService AccountService
+@model TestNetMVC.Models.Request
+
+@{
+  var username = ViewData["username"] as string;
+  var account = AccountService.FindByUsername(username);
+}
+
 <div class="modal" tabindex="-1" role="dialog" id="AddNewRequest">
   <div class="modal-dialog  modal-lg" role="document">
     <div class="modal-content">
@@ -7,22 +16,25 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form method="post" asp-area="employees" asp-controller="employees" asp-action="AddNewRequest">
+      <form method="post" asp-controller="Employees" asp-action="AddNewRequest">
         <div class="container-fluid">
           <div class="modal-body row d-flex justify-content-between flex-wrap">
             <div class="form-group col-5">
               <label for="Title">Title<span class="text-danger">*</span></label>
-              <input type="text" class="form-control" id="Title" placeholder="Title" name="Title">
+              <input type="text" class="form-control" id="Title" placeholder="Title" asp-for="@Model.Title">
             </div>
 
             <div class="form-group col-12">
               <label for="Description">Description<span class="text-danger">*</span></label>
-              <textarea type="text" class="form-control" id="Description" placeholder="Description" name="Description"
-                rows="10"></textarea>
+              <textarea type="text" class="form-control" id="Description" placeholder="Description"
+                asp-for="@Model.Description" rows="10"></textarea>
             </div>
             <div class="form-group col-5">
               <label></label>
-              <partial name="_ListPriorityPartial" />
+              <!-- /.List Priority -->
+              @await Html.PartialAsync("~/Areas/Shared/Partials/_ListPriorityPartial.cshtml", Model)
+              <!-- /.List Priority -->
+
             </div>
 
           </div>
@@ -31,7 +43,7 @@
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
           </div>
         </div>
-        <input type="hidden" name="EmployeeIdSubmit" value=@(10)>
+        <input type="hidden" asp-for="@Model.EmployeeIdSubmit" value="@account.Id">
       </form>
     </div>
   </div>

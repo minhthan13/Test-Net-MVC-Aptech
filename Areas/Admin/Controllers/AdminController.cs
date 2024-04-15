@@ -17,7 +17,8 @@ namespace TestNetMVC.Areas.Admin.Controllers
   [Authorize(Roles = "Admin")]
 
   [Area("Admin")]
-  [Route("Admin")]
+  [Route("/Admin")]
+  [Route("Admin/Admin")]
   public class AdminController : Controller
   {
 
@@ -74,12 +75,16 @@ namespace TestNetMVC.Areas.Admin.Controllers
     }
 
     [Route("Requests")]
-    public IActionResult Requests()
+    [Route("Requests/{page?}")]
+    public IActionResult Requests(int? page)
     {
-
+      if (page == null)
+      {
+        page = 1;
+      }
       var username = User.FindFirst(ClaimTypes.Name).Value;
       var user = accountService.FindByUsername(username);
-      return ViewComponent("ListRequest", user.Id);
+      return ViewComponent("ListRequest", new { EmployeeId = user.Id, page });
     }
 
 

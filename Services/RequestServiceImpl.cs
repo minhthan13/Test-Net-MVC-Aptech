@@ -15,7 +15,7 @@ namespace TestNetMVC.Services
     }
     public List<Request> FindAll()
     {
-      return db.Requests.ToList();
+      return db.Requests.OrderByDescending(r => r.SentDate).ToList();
     }
 
     public Request FindById(int RequestId)
@@ -30,12 +30,12 @@ namespace TestNetMVC.Services
 
     public List<Request> FindRequestEmployeeHandleId(int EmployeesId)
     {
-      return db.Requests.Where(r => r.EmployeeIdHandling == EmployeesId).ToList();
+      return db.Requests.Where(r => r.EmployeeIdHandling == EmployeesId).OrderByDescending(r => r.SentDate).ToList();
     }
 
     public List<Request> FindRequestEmployeeSubmitId(int EmployeesId)
     {
-      return db.Requests.Where(r => r.EmployeeIdSubmit == EmployeesId).ToList();
+      return db.Requests.Where(r => r.EmployeeIdSubmit == EmployeesId).OrderByDescending(r => r.SentDate).ToList();
     }
 
 

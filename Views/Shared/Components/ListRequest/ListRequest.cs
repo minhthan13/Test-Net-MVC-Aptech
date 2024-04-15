@@ -4,6 +4,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using TestNetMVC.Helpers;
+using TestNetMVC.Models;
 using TestNetMVC.Services;
 
 namespace TestNetMVC.Views.Shared.Components.ListRequest
@@ -15,20 +17,26 @@ namespace TestNetMVC.Views.Shared.Components.ListRequest
     {
       requestService = _requestService;
     }
-    public IViewComponentResult Invoke(int EmployeeId)
+    public IViewComponentResult Invoke(int EmployeeId, int page)
     {
-      ViewBag.EmployeeId = EmployeeId;
+      var requests = new List<Request>();
+      int PageSize = 5;
+      var skip = (page - 1) * PageSize;
+      var Take = PageSize;
       if (EmployeeId == 4)
       {
-
-        return View("ListRequest", requestService.FindAll());
+        requests = requestService.FindAll().Skip(skip).Take(Take).ToList();
       }
       else
       {
-        return View("ListRequest", requestService.FindRequestEmployeeSubmitId(EmployeeId));
+        requests = requestService.FindRequestEmployeeSubmitId(EmployeeId).Skip(skip).Take(Take).ToList();
       }
+
+      return View("ListRequest", new { requests = requests, userId = EmployeeId, thisPage = page });
+
 
 
     }
+
   }
 }

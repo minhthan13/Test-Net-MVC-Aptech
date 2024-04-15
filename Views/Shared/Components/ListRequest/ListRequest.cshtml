@@ -1,9 +1,43 @@
+@using TestNetMVC.Models
+@inject TestNetMVC.Services.RequestService RequestService
+@using System.Security.Claims
 @{
   Layout = "~/Areas/_Layout.cshtml";
+  var roleuser = User.FindFirst(ClaimTypes.Role).Value;
+  var username = User.FindFirst(ClaimTypes.Name).Value;
+  var request = new TestNetMVC.Models.Request { };
+  int id = Model.userId;
+  int thisPage = Model.thisPage;
+  int requestsCount = 0;
+  var roleArea = "";
+  var roleController = "";
+  var roleRequestAction = "";
+  switch (roleuser)
+  {
+    case "Admin":
+      roleArea = "Admin";
+      roleController = "Admin";
+      roleRequestAction = "Requests";
+      requestsCount = RequestService.FindAll().Count();
+      break;
+    case "Staff":
+      roleArea = "Employees";
+      roleController = "Employees";
+      roleRequestAction = "EmployeesRequest";
+      requestsCount = RequestService.FindRequestEmployeeSubmitId(id).Count();
+      break;
+  };
+  if (requestsCount % 5 != 0)
+  {
+    requestsCount = (requestsCount / 5) + 1;
+  }
+  else
+  {
+    requestsCount = requestsCount / 5;
+  }
+
 }
 
-@using TestNetMVC.Models
-@model List<Request>
 
 <div class="row">
   <div class="col-12">
@@ -12,13 +46,18 @@
         <h2 class="card-title"><b>Requests</b></h2>
 
         <div class="card-tools d-flex ">
-          <div class="modal-add-request mr-2">
-            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#AddNewRequest">
-              Add New Requests
-            </button>
-            <partial name="_AddNewRequestModal" />
+          @if (roleuser == "Staff")
+          {
+            <div class="modal-add-request mr-2">
+              <button type="button" class="btn btn-info" data-toggle="modal" data-target="#AddNewRequest">
+                Add New Requests
+              </button>
 
-          </div>
+              @(await Html.PartialAsync("~/Areas/Shared/Modals/_AddNewRequestModal.cshtml", request,
+                  new ViewDataDictionary(ViewData) { { "username", username } }))
+
+            </div>
+          }
           <div class="input-group input-group-sm align-content-center" style="width: 150px;">
             <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
             <div class="input-group-append">
@@ -30,8 +69,8 @@
         </div>
       </div>
       <!-- /.card-header -->
-      <div class="card-body table-responsive p-0" style="height: 300px;">
-        <table class="table table-bordered table-hover table-head-fixed text-nowrap text-center">
+      <div class="card-body p-0" style="height: 300px;">
+        <table class="table table-hover text-nowrap">
           <thead>
             <tr>
               <th>#</th>
@@ -47,7 +86,7 @@
             @{
               int i = 1;
             }
-            @foreach (var r in Model)
+            @foreach (var r in Model.requests)
             {
               <tr>
                 <td>@(i++)
@@ -61,13 +100,27 @@
                 <td>@r.Description</td>
               </tr>
             }
-
-
-
           </tbody>
         </table>
+
+
+
+
       </div>
+      <hr>
       <!-- /.card-body -->
+      <div class="row justify-content-center">
+
+        <ul class="pagination pagination-lg">
+          @for (int j = 1; j <= requestsCount; j++)
+          {
+            <li class="@(thisPage == j?"page-item active":"page-item")"><a class="page-link" asp-area="@roleArea"
+                asp-controller="@roleController" asp-action="@roleRequestAction" asp-route-page="@j">@j</a></li>
+          }
+        </ul>
+      </div>
+
+
     </div>
     <!-- /.card -->
   </div>

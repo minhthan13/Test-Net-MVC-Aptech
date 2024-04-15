@@ -1,13 +1,27 @@
 @using System.Security.Claims
 @using TestNetMVC.Services
+@using TestNetMVC.Models
 @inject AccountService AccountService
 
 
 @{
+
   string username = User.FindFirst(ClaimTypes.Name).Value;
   string rolename = User.FindFirst(ClaimTypes.Role).Value;
   var account = AccountService.FindByUsername(username);
-
+  var roleArea = "";
+  var roleController = "";
+  switch (rolename)
+  {
+    case "Admin":
+      roleArea = "Admin";
+      roleController = "Admin";
+      break;
+    case "Staff":
+      roleArea = "Employees";
+      roleController = "Employees";
+      break;
+  };
 }
 
 <!DOCTYPE html>
@@ -40,6 +54,42 @@
   <link rel="stylesheet" href="~/lib/Template/plugins/daterangepicker/daterangepicker.css" />
   <!-- summernote -->
   <link rel="stylesheet" href="~/lib/Template/plugins/summernote/summernote-bs4.min.css" />
+
+
+  <!-- jQuery -->
+  <script src="~/lib/Template/plugins/jquery/jquery-3.7.1.min.js"></script>
+  <!-- jQuery UI 1.11.4 -->
+  <script src="~/lib/Template/plugins/jquery-ui/jquery-ui.min.js"></script>
+  <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+  <script>
+    $.widget.bridge("uibutton", $.ui.button);
+  </script>
+  <!-- Bootstrap 4 -->
+  <script src="~/lib/Template/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <!-- ChartJS -->
+  <script src="~/lib/Template/plugins/chart.js/Chart.min.js"></script>
+  <!-- Sparkline -->
+  <script src="~/lib/Template/plugins/sparklines/sparkline.js"></script>
+  <!-- JQVMap -->
+  <script src="~/lib/Template/plugins/jqvmap/jquery.vmap.min.js"></script>
+  <script src="~/lib/Template/plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
+  <!-- jQuery Knob Chart -->
+  <script src="~/lib/Template/plugins/jquery-knob/jquery.knob.min.js"></script>
+  <!-- daterangepicker -->
+  <script src="~/lib/Template/plugins/moment/moment.min.js"></script>
+  <script src="~/lib/Template/plugins/daterangepicker/daterangepicker.js"></script>
+  <!-- Tempusdominus Bootstrap 4 -->
+  <script src="~/lib/Template/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+  <!-- Summernote -->
+  <script src="~/lib/Template/plugins/summernote/summernote-bs4.min.js"></script>
+  <!-- overlayScrollbars -->
+  <script src="~/lib/Template/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+  <!-- AdminLTE App -->
+  <script src="~/lib/Template/dist/js/adminlte.js"></script>
+  <!-- AdminLTE for demo purposes -->
+  <script src="~/lib/Template/dist/js/demo.js"></script>
+  <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+  <script src="~/lib/Template/dist/js/pages/dashboard.js"></script>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -61,18 +111,18 @@
         @if (rolename == "Admin")
         {
           <li class="nav-item d-none d-sm-inline-block">
-            <a asp-area="Admin" asp-controller="Admin" asp-action="Employees" class="nav-link">Employees</a>
+            <a asp-controller="@roleController" asp-action="Employees" class="nav-link">Employees</a>
           </li>
 
           <li class="nav-item d-none d-sm-inline-block">
-            <a asp-area="Admin" asp-controller="Admin" asp-action="Requests" class="nav-link">Requests</a>
+            <a asp-controller="@roleController" asp-action="Requests" class="nav-link">Requests</a>
           </li>
         }
         @if (rolename == "Staff")
         {
 
           <li class="nav-item d-none d-sm-inline-block">
-            <a asp-area="Employees" asp-controller="Employees" asp-action="EmployeesRequest" class="nav-link">Requests</a>
+            <a asp-controller="@roleController" asp-action="EmployeesRequest" class="nav-link">Requests</a>
           </li>
         }
       </ul>
@@ -91,7 +141,7 @@
     <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
       <!-- Brand Logo -->
-      <a asp-controller="Home" asp-action="Dashboard" class="brand-link">
+      <a asp-controller="@roleController" asp-area="@roleArea" asp-action="Dashboard" class="brand-link">
         <img src="~/images/ASP.png" alt="MVC Logo" class="brand-image img-circle elevation-3" style="opacity: 0.8" />
         <span class="brand-text font-weight-light">Test Net MVC</span>
       </a>
@@ -105,7 +155,7 @@
             <img src="~/images/@account.Photo" class="img-circle elevation-2" alt="User Image" />
           </div>
           <div class="info">
-            <a asp-controller="Home" asp-action="Dashboard" class="d-block">
+            <a asp-area="@roleArea" asp-controller="@roleController" asp-action="Dashboard" class="d-block">
               @account.Fullname.ToUpper()
             </a>
           </div>
@@ -115,7 +165,7 @@
         <nav class="mt-2">
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <li class="nav-item menu-open">
-              <a href="#" class="nav-link active">
+              <a asp-controller="@roleController" asp-area="@roleArea" asp-action="Dashboard" class="nav-link active">
                 <i class="nav-icon fas fa-tachometer-alt"></i>
                 <p>
                   Dashboard
@@ -131,23 +181,19 @@
                   <i class="right fas fa-angle-left"></i>
                 </p>
               </a>
+
               <ul class="nav nav-treeview">
                 @if (rolename == "Admin")
                 {
+
                   <li class="nav-item">
-                    <a asp-area="Admin" asp-controller="Admin" asp-action="Dashboard" class="nav-link ">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>Dashboard</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a asp-area="Admin" asp-controller="Admin" asp-action="Employees" class="nav-link ">
+                    <a asp-controller="@roleController" asp-action="Employees" class="nav-link ">
                       <i class="far fa-circle nav-icon"></i>
                       <p>Employees</p>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a asp-area="Admin" asp-controller="Admin" asp-action="Requests" class="nav-link">
+                    <a asp-controller="@roleController" asp-action="Requests" asp-route-page=@(1) class="nav-link">
                       <i class="far fa-circle nav-icon"></i>
                       <p>Requests</p>
                     </a>
@@ -156,10 +202,13 @@
 
                 @if (rolename == "Staff")
                 {
-                  <a asp-area="Employees" asp-controller="Employees" asp-action="EmployeeRequest" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Requests</p>
-                  </a>
+                  <li class="nav-item">
+                    <a asp-controller="@roleController" asp-action="EmployeesRequest" asp-route-page=@(1)
+                      class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Requests</p>
+                    </a>
+                  </li>
                 }
 
               </ul>
@@ -197,40 +246,6 @@
   </div>
   <!-- ./wrapper -->
 
-  <!-- jQuery -->
-  <script src="~/lib/Template/plugins/jquery/jquery-3.7.1.min.js"></script>
-  <!-- jQuery UI 1.11.4 -->
-  <script src="~/lib/Template/plugins/jquery-ui/jquery-ui.min.js"></script>
-  <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-  <script>
-    $.widget.bridge("uibutton", $.ui.button);
-  </script>
-  <!-- Bootstrap 4 -->
-  <script src="~/lib/Template/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <!-- ChartJS -->
-  <script src="~/lib/Template/plugins/chart.js/Chart.min.js"></script>
-  <!-- Sparkline -->
-  <script src="~/lib/Template/plugins/sparklines/sparkline.js"></script>
-  <!-- JQVMap -->
-  <script src="~/lib/Template/plugins/jqvmap/jquery.vmap.min.js"></script>
-  <script src="~/lib/Template/plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
-  <!-- jQuery Knob Chart -->
-  <script src="~/lib/Template/plugins/jquery-knob/jquery.knob.min.js"></script>
-  <!-- daterangepicker -->
-  <script src="~/lib/Template/plugins/moment/moment.min.js"></script>
-  <script src="~/lib/Template/plugins/daterangepicker/daterangepicker.js"></script>
-  <!-- Tempusdominus Bootstrap 4 -->
-  <script src="~/lib/Template/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
-  <!-- Summernote -->
-  <script src="~/lib/Template/plugins/summernote/summernote-bs4.min.js"></script>
-  <!-- overlayScrollbars -->
-  <script src="~/lib/Template/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
-  <!-- AdminLTE App -->
-  <script src="~/lib/Template/dist/js/adminlte.js"></script>
-  <!-- AdminLTE for demo purposes -->
-  <script src="~/lib/Template/dist/js/demo.js"></script>
-  <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-  <script src="~/lib/Template/dist/js/pages/dashboard.js"></script>
 
 
 
