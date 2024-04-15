@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 
 namespace TestNetMVC.Models;
@@ -28,14 +29,21 @@ public partial class Request
 
   [ForeignKey("EmployeeIdHandling")]
   [InverseProperty("RequestEmployeeIdHandlingNavigations")]
+  [JsonIgnore]
+
   public virtual Employee? EmployeeIdHandlingNavigation { get; set; }
 
   [ForeignKey("EmployeeIdSubmit")]
   [InverseProperty("RequestEmployeeIdSubmitNavigations")]
+  [JsonIgnore]
+
+
   public virtual Employee EmployeeIdSubmitNavigation { get; set; } = null!;
 
   [ForeignKey("PriorityId")]
   [InverseProperty("Requests")]
+  [JsonIgnore]
+
   public virtual Priority Priority { get; set; } = null!;
 
 

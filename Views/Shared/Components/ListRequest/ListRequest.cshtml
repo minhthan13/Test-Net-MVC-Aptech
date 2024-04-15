@@ -1,3 +1,7 @@
+@{
+  Layout = "~/Areas/_Layout.cshtml";
+}
+
 @using TestNetMVC.Models
 @model List<Request>
 
@@ -12,7 +16,7 @@
             <button type="button" class="btn btn-info" data-toggle="modal" data-target="#AddNewRequest">
               Add New Requests
             </button>
-            <partial name="_AddNewRequestModal">
+            <partial name="_AddNewRequestModal" />
 
           </div>
           <div class="input-group input-group-sm align-content-center" style="width: 150px;">
@@ -34,8 +38,8 @@
               <th>Title</th>
               <th>Sent Date</th>
               <th>Priority</th>
-              <th>Submit</th>
               <th>Handle</th>
+              <th>Submit</th>
               <th>Description</th>
             </tr>
           </thead>

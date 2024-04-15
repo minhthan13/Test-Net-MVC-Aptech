@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using TestNetMVC.Services;
 
-namespace TestNetMVC.Areas.Shared.Components.ListRequest
+namespace TestNetMVC.Views.Shared.Components.ListRequest
 {
   public class ListRequest : ViewComponent
   {
@@ -26,7 +26,6 @@ namespace TestNetMVC.Areas.Shared.Components.ListRequest
       else
       {
         return View("ListRequest", requestService.FindRequestEmployeeSubmitId(EmployeeId));
-
       }
 
 

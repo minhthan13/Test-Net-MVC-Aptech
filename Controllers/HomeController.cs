@@ -23,6 +23,7 @@ public class HomeController : Controller
   [Route("")]
   [Route("~/")]
   [Route("Login")]
+  [HttpGet]
   public IActionResult Login()
   {
     return View();
@@ -46,16 +47,18 @@ public class HomeController : Controller
       var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
       var claimsPrincial = new ClaimsPrincipal(claimsIdentity);
       await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincial);
-      switch (account.Roles.First().RoleName)
+
+
+      var roleName = account.Roles.First().RoleName;
+      switch (roleName)
       {
         case "Admin":
-          return RedirectToAction("Dashboard", "Admin", new { Area = "Admin" });
+          return RedirectToAction("Dashboard", "Admin");
         case "Staff":
-          return RedirectToAction("EmployeeRequest", "Employees", new { Area = "Employees" });
-        case "Support Staff":
-        default:
-          return RedirectToAction("Dashboard", "Admin", new { Area = "Admin" });
+          return RedirectToAction("Dashboard", "Employees");
       }
+      return RedirectToAction("Dashboard");
+
     }
     else
     {
@@ -66,12 +69,17 @@ public class HomeController : Controller
   }
 
 
+  public IActionResult Dashboard()
+  {
+
+    return ViewComponent("Dashboard");
+  }
 
   [Route("logout")]
   public async Task<IActionResult> Logout()
   {
 
     await HttpContext.SignOutAsync();
-    return RedirectToAction("login");
+    return View("login");
   }
 }

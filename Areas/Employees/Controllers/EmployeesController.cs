@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,17 +19,25 @@ namespace TestNetMVC.Areas.Employees.Controllers
   public class EmployeesController : Controller
   {
     private readonly RequestService requestService;
-    public EmployeesController(RequestService _requestService)
+    private readonly AccountService accountService;
+    public EmployeesController(RequestService _requestService, AccountService _accountService)
     {
       requestService = _requestService;
+      accountService = _accountService;
     }
+    [Route("Dashboard")]
+    public IActionResult Dashboard()
+    {
 
-
+      return ViewComponent("Dashboard");
+    }
     [Route("")]
     [Route("EmployeeRequest")]
     public IActionResult EmployeeRequest()
     {
-      return View();
+      var username = User.FindFirst(ClaimTypes.Name).Value;
+      var user = accountService.FindByUsername(username);
+      return ViewComponent("ListRequest", user.Id);
     }
 
 

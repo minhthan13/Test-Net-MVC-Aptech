@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using TestNetMVC.Helpers;
 using TestNetMVC.Models;
 using TestNetMVC.Services;
+
 
 namespace TestNetMVC.Areas.Admin.Controllers
 {
@@ -32,7 +34,7 @@ namespace TestNetMVC.Areas.Admin.Controllers
     [Route("Dashboard")]
     public IActionResult Dashboard()
     {
-      return View("Dashboard");
+      return ViewComponent("Dashboard");
     }
 
 
@@ -74,7 +76,10 @@ namespace TestNetMVC.Areas.Admin.Controllers
     [Route("Requests")]
     public IActionResult Requests()
     {
-      return View("Requests");
+
+      var username = User.FindFirst(ClaimTypes.Name).Value;
+      var user = accountService.FindByUsername(username);
+      return ViewComponent("ListRequest", user.Id);
     }
 
 

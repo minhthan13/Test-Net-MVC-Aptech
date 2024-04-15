@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 using TestNetMVC.Models;
 using TestNetMVC.Services;
@@ -11,9 +12,8 @@ public class Program
   public static void Main(string[] args)
   {
     var builder = WebApplication.CreateBuilder(args);
-
-
     builder.Services.AddControllersWithViews();
+
     builder.Services.AddSession();
     var ConnectString = builder.Configuration["ConnectionStrings:DefaultConnection"];
 
