@@ -11,9 +11,7 @@ namespace TestNetMVC.Controllers;
 [Route("home")]
 public class HomeController : Controller
 {
-
   private readonly AccountService accountService;
-
 
   public HomeController(AccountService _accountService)
   {
@@ -53,9 +51,9 @@ public class HomeController : Controller
       switch (roleName)
       {
         case "Admin":
-          return RedirectToAction("Dashboard", "Admin", new { Areas = "Admin" });
+          return RedirectToAction("Dashboard", "Admin", new { area = "Admin" });
         case "Staff":
-          return RedirectToAction("Dashboard", "Employees", new { Areas = "Employees" });
+          return RedirectToAction("Dashboard", "Employees", new { area = "Employees" });
       }
       return RedirectToAction("Dashboard");
 
@@ -68,7 +66,7 @@ public class HomeController : Controller
 
   }
 
-
+  [Route("Dashboard")]
   public IActionResult Dashboard()
   {
 

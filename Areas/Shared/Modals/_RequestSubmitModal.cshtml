@@ -1,0 +1,55 @@
+@using TestNetMVC.Models
+@using TestNetMVC.Services
+@model Employee
+@inject RequestService RequestService
+
+@{
+
+
+  var requests = RequestService.FindRequestEmployeeSubmitId(Model.Id);
+
+
+}
+
+
+<div class="table-responsive">
+  <table class="table table-hover text-nowrap">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Title</th>
+        <th>Sent Date</th>
+        <th>Priority</th>
+        <th>Handle</th>
+        <th>Description</th>
+        <th>Submit</th>
+      </tr>
+    </thead>
+    <tbody>
+      @{
+        int i = 1;
+      }
+
+      @foreach (var r in requests)
+      {
+        <tr>
+          <td>@(i++)
+          </td>
+          <td>@r.Title</td>
+
+          <td>@r.SentDate.ToString("dd-MM-yyyy")</td>
+          <td>@r.Priority.PriorityName</td>
+          <td><i><b>@(r.EmployeeIdHandlingNavigation != null ? r.EmployeeIdHandlingNavigation.Username : "none")</b></i>
+          </td>
+          <td>@r.Description</td>
+          <td>
+            @await Html.PartialAsync("~/Areas/Shared/Partials/_ListEmployeeHandlePartial.cshtml", r.Id)
+          </td>
+        </tr>
+      }
+
+
+
+    </tbody>
+  </table>
+</div>

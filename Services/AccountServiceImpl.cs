@@ -51,8 +51,11 @@ namespace TestNetMVC.Services
       {
         return false;
       }
+    }
 
-
+    public List<Employee> FindEmployeeSupport()
+    {
+      return db.Employees.Where(e => e.Roles.Any(r => r.RoleName.Contains("Support Staff"))).ToList();
     }
 
 

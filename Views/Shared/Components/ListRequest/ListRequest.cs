@@ -32,7 +32,7 @@ namespace TestNetMVC.Views.Shared.Components.ListRequest
         requests = requestService.FindRequestEmployeeSubmitId(EmployeeId).Skip(skip).Take(Take).ToList();
       }
 
-      return View("ListRequest", new { requests = requests, userId = EmployeeId, thisPage = page });
+      return View("ListRequest", new { requests, userId = EmployeeId, thisPage = page });
 
 
 

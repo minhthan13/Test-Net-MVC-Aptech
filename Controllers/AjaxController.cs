@@ -29,5 +29,15 @@ namespace TestNetMVC.Controllers
     }
 
 
+    [Route("ModalEmployeePartial")]
+    public IActionResult ModalEmployeePartial(string username)
+    {
+
+      var account = accountService.FindByUsername(username);
+
+      return PartialView("~/Areas/Shared/Modals/_RequestSubmitModal.cshtml", account);
+    }
+
+
   }
 }

@@ -13,6 +13,7 @@ namespace TestNetMVC.Services
     public List<Employee> FindAll();
 
     public bool AddNewEmployee(Employee employee);
+    public List<Employee> FindEmployeeSupport();
 
 
   }

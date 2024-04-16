@@ -17,8 +17,7 @@ namespace TestNetMVC.Areas.Admin.Controllers
   [Authorize(Roles = "Admin")]
 
   [Area("Admin")]
-  [Route("/Admin")]
-  [Route("Admin/Admin")]
+  [Route("[controller]")]
   public class AdminController : Controller
   {
 
@@ -55,7 +54,7 @@ namespace TestNetMVC.Areas.Admin.Controllers
       {
         Photo.CopyTo(fileStream);
       };
-      if (employee.Dob != null) employee.Dob = DateTime.Now;
+      employee.Dob = DateTime.Now;
       employee.Password = BCrypt.Net.BCrypt.HashPassword(employee.Password);
       employee.Status = false;
       employee.Photo = fileName;
