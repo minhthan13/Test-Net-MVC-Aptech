@@ -26,10 +26,10 @@ namespace TestNetMVC.Areas.Employees.Controllers
       requestService = _requestService;
       accountService = _accountService;
     }
-    [Route("Dashboard")]
-    public IActionResult Dashboard()
+    [Route("Welcome")]
+    public IActionResult Welcome()
     {
-      return ViewComponent("Dashboard");
+      return ViewComponent("Welcome");
     }
 
     [Route("Information/{username}")]

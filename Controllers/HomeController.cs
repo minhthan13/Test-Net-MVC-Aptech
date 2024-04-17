@@ -57,11 +57,11 @@ public class HomeController : Controller
         case "Admin":
           return RedirectToAction("Dashboard", "Admin", new { area = "Admin" });
         case "Staff":
-          return RedirectToAction("Dashboard", "Employees", new { area = "Employees" });
+          return RedirectToAction("Welcome", "Employees", new { area = "Employees" });
         case "Support Staff":
-          return RedirectToAction("Dashboard", "Support", new { area = "Support" });
+          return RedirectToAction("Welcome", "Support", new { area = "Support" });
       }
-      return RedirectToAction("Dashboard");
+      return RedirectToAction("Welcome");
 
     }
     else
@@ -72,11 +72,10 @@ public class HomeController : Controller
 
   }
 
-  [Route("Dashboard")]
-  public IActionResult Dashboard()
+  [Route("Welcome")]
+  public IActionResult Welcome()
   {
-
-    return ViewComponent("Dashboard");
+    return ViewComponent("Welcome");
   }
 
   [HttpPost]
@@ -108,7 +107,7 @@ public class HomeController : Controller
     {
       a = "failed";
     }
-    return ViewComponent("Dashboard");
+    return ViewComponent("Welcome");
   }
 
   [Route("logout")]

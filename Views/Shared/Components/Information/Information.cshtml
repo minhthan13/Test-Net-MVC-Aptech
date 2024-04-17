@@ -5,6 +5,7 @@
   Layout = "~/Areas/_Layout.cshtml";
 
   var roleuser = User.FindFirst(ClaimTypes.Role).Value;
+  var username = User.FindFirst(ClaimTypes.Name).Value;
   var roleArea = "";
   var roleController = "";
 
@@ -13,23 +14,25 @@
     case "Admin":
       roleArea = "Admin";
       roleController = "Admin";
-
       break;
     case "Staff":
       roleArea = "Employees";
       roleController = "Employees";
+      break;
 
+    case "Support Staff":
+      roleArea = "Support";
+      roleController = "Support";
       break;
   };
 
 }
 
 
-<h1> My Information @Model.Username</h1>
+<div class="row justify-content-center h1 mt-1"><strong>Account Management</strong></div>
 
 <hr>
-<br>
-<br>
+
 <form method="post" asp-controller="Home" asp-action="EditAccount" enctype="multipart/form-data">
   <input type="hidden" asp-for="Username">
   <div class="container">
@@ -50,11 +53,27 @@
           <label for="Birthday">Birthday</label>
           <input type="date" class="form-control" id="Birthday" asp-for="Dob" />
         </div>
-        <div class="form-group col-5">
-          <div class="input-group">
-            <label class="input-group-text">Role</label>
-            <input type="text" disabled class="form-control" value="@Model.Roles.First().RoleName">
+        <div class="form-group col-12">
+          <div class="d-flex row justify-content-between">
+            <div class="col-12 row justify-content-between ">
+              <div class="input-group col-6">
+
+                <label class="input-group-text">Role</label>
+                <input type="text" disabled class="form-control" value="@Model.Roles.First().RoleName">
+              </div>
+
+
+              <div class="col-6">
+
+                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#ChangePassword">
+                  Change Password
+                </button>
+              </div>
+            </div>
+
+
           </div>
+
         </div>
 
       </div>
@@ -84,6 +103,53 @@
 
 </form>
 <br>
+
+
+
+
+
+
+<!--MODAL-->
+
+
+<div class="modal fade " id="ChangePassword" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Change Password</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form method="post" asp-controller="@roleController" asp-action="ChangePassword">
+        <div class="modal-body">
+          <div class="d-flex row justify-content-center">
+            <div class="form-group col-10">
+              <label for="OPassword">Old Password</label>
+              <input type="password" class="form-control" id="OPassword" name="oPassword">
+            </div>
+            <div class="form-group col-10">
+              <label for="NPassword">Created New Password</label>
+              <input type="password" class="form-control" id="NPassword" name="nPassword">
+            </div>
+            <div class="form-group col-10">
+              <label for="CNPassword">Confirm New Password</label>
+              <input type="password" class="form-control" id="CNPassword">
+            </div>
+          </div>
+          <input type="hidden" value="@username" name="username">
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-info">Save changes</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!--MODAL-->
 
 
 <script>

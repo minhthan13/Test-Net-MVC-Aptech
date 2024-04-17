@@ -1,9 +1,49 @@
-@model string
-
 @{
   Layout = "~/Areas/_Layout.cshtml";
+  var requestCount = Model.RequestsCount;
+  var employeesCount = Model.EmployeesCount;
+
 }
 
+<div class="row justify-content-center">
+  <div class="mt-1 h1"><strong>Dashboard</strong></div>
+</div>
+<hr>
+<div style="height: 50vh;">
+  <div class="container h-100 align-content-center">
+    <div class="col-12 row justify-content-center ">
+      <div class=" col-6">
+        <!-- small box -->
+        <div class="small-box bg-warning">
+          <div class="inner">
+            <h3>@employeesCount</h3>
+            <p>Employees</p>
+          </div>
+          <div class="icon">
+            <i class="ion ion-person-add"></i>
+          </div>
+          <a asp-controller="Admin" asp-action="Employees" class="small-box-footer">More info <i
+              class="fas fa-arrow-circle-right"></i></a>
+        </div>
+      </div>
+      <!-- ./col -->
+      <div class="col-6">
+        <!-- small box -->
+        <div class="small-box bg-danger">
+          <div class="inner">
+            <h3>@requestCount</h3>
 
-<h1> My dashboard </h1>
-<h2>Update @Model</h2>
+            <p>Requests</p>
+          </div>
+          <div class="icon">
+            <i class="ion ion-pie-graph"></i>
+          </div>
+          <a asp-controller="Admin" asp-action="Requests" class="small-box-footer">More info <i
+              class="fas fa-arrow-circle-right"></i></a>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+</div>

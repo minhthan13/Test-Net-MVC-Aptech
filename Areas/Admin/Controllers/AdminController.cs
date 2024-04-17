@@ -17,7 +17,8 @@ namespace TestNetMVC.Areas.Admin.Controllers
   [Authorize(Roles = "Admin")]
 
   [Area("Admin")]
-  [Route("[controller]")]
+  [Route("Admin")]
+  [Route("Admin/Admin")]
   public class AdminController : Controller
   {
 
@@ -35,6 +36,12 @@ namespace TestNetMVC.Areas.Admin.Controllers
     public IActionResult Dashboard()
     {
       return ViewComponent("Dashboard");
+    }
+
+    [Route("Welcome")]
+    public IActionResult Welcome()
+    {
+      return ViewComponent("Welcome");
     }
 
 
@@ -95,6 +102,26 @@ namespace TestNetMVC.Areas.Admin.Controllers
 
     }
 
+    [HttpPost]
+    [Route("ChangePassword")]
+    public IActionResult ChangePassword(string username, string oPassword, string nPassword)
+    {
+      var account = accountService.FindByUsername(username);
+      if (BCrypt.Net.BCrypt.Verify(oPassword, account.Password))
+      {
+        account.Password = BCrypt.Net.BCrypt.HashPassword(nPassword);
+        if (accountService.EditAccount(account))
+        {
+          return RedirectToAction("Information", new { username });
+        }
+        else
+        {
+          return RedirectToAction("Information", new { username });
+        }
+      }
+
+      return RedirectToAction("Information", new { username });
+    }
 
   }
 }

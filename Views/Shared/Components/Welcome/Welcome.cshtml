@@ -1,0 +1,45 @@
+@using System.Security.Claims;
+@using TestNetMVC.Services
+@inject AccountService AccountService
+@{
+  Layout = "~/Areas/_Layout.cshtml";
+  var username = User.FindFirst(ClaimTypes.Name).Value;
+  var account = AccountService.FindByUsername(username);
+
+}
+<div class="container justify-content-center">
+  <div class="row justify-content-center">
+    <div class="h1">
+
+      Welcome
+    </div>
+  </div>
+  <div class="row  justify-content-center">
+
+
+    <div class="col-8">
+      <table class="table table-bordered align-middle">
+
+        <tr>
+          <td rowspan="5" class="col-5 align-content-center"><img src="~/images/@account.Photo" width="300px"
+              height="200"></td>
+          <td class="align-middle"><strong>Name:</strong> @account.Username</td>
+        </tr>
+        <tr>
+          <td class="align-middle"><strong>Fullname:</strong> @account.Fullname</td>
+        </tr>
+        <tr>
+          <td class="align-middle"><strong>Birth Day:</strong> @account.Dob.ToString("dd/MM/yyyy")</td>
+        </tr>
+        <tr>
+          <td class="align-middle"><strong>Status:</strong> @(account.Status ? "Active" : "Pending")</td>
+        </tr>
+        <tr>
+          <td class="align-middle"><strong>Role:</strong> @account.Roles.First().RoleName</td>
+        </tr>
+      </table>
+    </div>
+
+  </div>
+</div>
+</div>
