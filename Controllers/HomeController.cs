@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Security.Claims;
+using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
@@ -15,11 +16,13 @@ public class HomeController : Controller
 {
   private readonly AccountService accountService;
   private readonly IWebHostEnvironment environment;
+  private readonly INotyfService notyf;
 
-  public HomeController(AccountService _accountService, IWebHostEnvironment _environment)
+  public HomeController(AccountService _accountService, IWebHostEnvironment _environment, INotyfService _notyf)
   {
     accountService = _accountService;
     environment = _environment;
+    notyf = _notyf;
   }
 
   [Route("")]
@@ -57,6 +60,8 @@ public class HomeController : Controller
         case "Admin":
           return RedirectToAction("Dashboard", "Admin", new { area = "Admin" });
         case "Staff":
+
+          notyf.Success("Login success");
           return RedirectToAction("Welcome", "Employees", new { area = "Employees" });
         case "Support Staff":
           return RedirectToAction("Welcome", "Support", new { area = "Support" });

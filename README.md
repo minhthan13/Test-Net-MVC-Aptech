@@ -9,3 +9,11 @@
   dotnet add package BCrypt.Net-Core
   dotnet add package Newtonsoft.Json
 ```
+
+# Database
+
+`testnetmvc`
+
+# Toastify
+
+    [Toastify Libary](https://codewithmukesh.com/blog/toast-notifications-in-aspnet-core/)

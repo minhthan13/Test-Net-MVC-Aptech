@@ -1,3 +1,5 @@
+using AspNetCoreHero.ToastNotification;
+using AspNetCoreHero.ToastNotification.Extensions;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
@@ -37,6 +39,14 @@ public class Program
               // option.AccessDeniedPath = "/account/accessdenied";
             });
 
+    // cau hinh toastify
+    builder.Services.AddNotyf(config =>
+                    {
+                      config.DurationInSeconds = 5;
+                      config.IsDismissable = true;
+                      config.Position = NotyfPosition.BottomRight;
+                    }
+    );
 
     var app = builder.Build();
     app.UseAuthentication();
@@ -45,7 +55,7 @@ public class Program
     app.UseStaticFiles();
     app.UseSession();
     app.UseRouting();
-
+    app.UseNotyf();
     app.UseAuthorization();
     app.MapControllerRoute(
       name: "myareas",

@@ -97,6 +97,12 @@
   <script src="~/lib/Template/dist/js/demo.js"></script>
   <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
   <script src="~/lib/Template/dist/js/pages/dashboard.js"></script>
+
+  <!-- TOATIFY -->
+
+
+  <!-- TOATIFY -->
+
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -277,7 +283,9 @@
 
 
 
+  @await Component.InvokeAsync("Notyf")
 
+  @await RenderSectionAsync("Scripts", required: false)
 </body>
 
 </html>
