@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using TestNetMVC.Models;
 
 namespace TestNetMVC.Services
@@ -35,7 +36,7 @@ namespace TestNetMVC.Services
 
     public List<Request> FindRequestEmployeeSubmitId(int EmployeesId)
     {
-      return db.Requests.Where(r => r.EmployeeIdSubmit == EmployeesId).OrderByDescending(r => r.SentDate).ToList();
+      return db.Requests.Where(r => r.EmployeeIdSubmit == EmployeesId).OrderByDescending(r => r.EmployeeIdHandling).ToList();
     }
 
 
@@ -49,6 +50,24 @@ namespace TestNetMVC.Services
 
       }
       catch
+      {
+        return false;
+      }
+
+
+    }
+
+    public bool ChangeHandleRequest(int ESuppId, int requestId)
+    {
+      var request = FindById(requestId);
+      request.EmployeeIdHandling = ESuppId;
+
+      try
+      {
+        db.Entry(request).State = EntityState.Modified;
+        return db.SaveChanges() > 0;
+      }
+      catch (System.Exception)
       {
         return false;
       }

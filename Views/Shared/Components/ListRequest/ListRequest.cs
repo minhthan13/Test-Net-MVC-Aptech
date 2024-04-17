@@ -13,23 +13,32 @@ namespace TestNetMVC.Views.Shared.Components.ListRequest
   public class ListRequest : ViewComponent
   {
     private readonly RequestService requestService;
+
     public ListRequest(RequestService _requestService)
     {
       requestService = _requestService;
     }
-    public IViewComponentResult Invoke(int EmployeeId, int page)
+    public IViewComponentResult Invoke(int EmployeeId, string roleName, int page)
     {
       var requests = new List<Request>();
+
+
       int PageSize = 5;
-      var skip = (page - 1) * PageSize;
       var Take = PageSize;
-      if (EmployeeId == 4)
+      var skip = (page - 1) * PageSize;
+      switch (roleName)
       {
-        requests = requestService.FindAll().Skip(skip).Take(Take).ToList();
-      }
-      else
-      {
-        requests = requestService.FindRequestEmployeeSubmitId(EmployeeId).Skip(skip).Take(Take).ToList();
+        case "Admin":
+          requests = requestService.FindAll().Skip(skip).Take(Take).ToList();
+          break;
+
+        case "Staff":
+          requests = requestService.FindRequestEmployeeSubmitId(EmployeeId).Skip(skip).Take(Take).ToList();
+          break;
+
+        case "Support Staff":
+          requests = requestService.FindRequestEmployeeHandleId(EmployeeId).Skip(skip).Take(Take).ToList();
+          break;
       }
 
       return View("ListRequest", new { requests, userId = EmployeeId, thisPage = page });

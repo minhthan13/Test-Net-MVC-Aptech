@@ -16,5 +16,8 @@ namespace TestNetMVC.Services
 
     public bool AddNewRequest(Request request);
 
+
+    public bool ChangeHandleRequest(int ESuppId, int requestId);
+
   }
 }

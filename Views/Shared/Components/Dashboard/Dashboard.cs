@@ -8,9 +8,14 @@ namespace TestNetMVC.Views.Shared.Components.Dashboard
 {
   public class Dashboard : ViewComponent
   {
-    public IViewComponentResult Invoke()
+    public IViewComponentResult Invoke(string? a)
     {
-      return View("Dashboard");
+      string b = "none";
+      if (!string.IsNullOrEmpty(a))
+      {
+        b = a;
+      }
+      return View("Dashboard", b);
     }
   }
 }

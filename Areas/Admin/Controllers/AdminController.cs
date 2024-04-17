@@ -38,6 +38,13 @@ namespace TestNetMVC.Areas.Admin.Controllers
     }
 
 
+    [Route("Information/{username}")]
+    public IActionResult Information(string username)
+    {
+
+      return ViewComponent("Information", username);
+    }
+
     [Route("Employees")]
     public IActionResult Employees()
     {
@@ -82,8 +89,10 @@ namespace TestNetMVC.Areas.Admin.Controllers
         page = 1;
       }
       var username = User.FindFirst(ClaimTypes.Name).Value;
+      var roleName = User.FindFirst(ClaimTypes.Role).Value;
       var user = accountService.FindByUsername(username);
-      return ViewComponent("ListRequest", new { EmployeeId = user.Id, page });
+      return ViewComponent("ListRequest", new { EmployeeId = user.Id, roleName, page });
+
     }
 
 

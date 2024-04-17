@@ -15,9 +15,11 @@ namespace TestNetMVC.Controllers
   {
 
     private readonly AccountService accountService;
-    public AjaxController(AccountService _accountService)
+    private readonly RequestService requestService;
+    public AjaxController(AccountService _accountService, RequestService _requestService)
     {
       accountService = _accountService;
+      requestService = _requestService;
     }
     [Route("findEmplpoyeeByUsername")]
     public IActionResult FindEmplpoyeeByUsername(string username)
@@ -34,9 +36,47 @@ namespace TestNetMVC.Controllers
     {
 
       var account = accountService.FindByUsername(username);
+      var requests = requestService.FindRequestEmployeeSubmitId(account.Id).OrderByDescending(r =>
+  r.EmployeeIdHandling);
 
-      return PartialView("~/Areas/Shared/Modals/_RequestSubmitModal.cshtml", account);
+      return PartialView("~/Areas/Shared/Modals/_RequestSubmitModal.cshtml", new { requests, account });
     }
+
+
+
+    [Route("ActiveAccount")]
+    public IActionResult ActiveAccount(string username, bool isChecked)
+    {
+      string res = "";
+      if (accountService.ActiveAcount(username, isChecked))
+      {
+        res = "Active Suscces";
+      }
+      else
+      {
+        res = "Active Failed";
+      }
+      return new JsonResult(new { status = res });
+    }
+
+
+    [Route("ChangeHandleRequest")]
+    public IActionResult ChangeHandleRequest(int ESuppId, int requestId)
+    {
+      string res = "";
+      if (requestService.ChangeHandleRequest(ESuppId, requestId))
+      {
+        res = "Change Suscces";
+      }
+      else
+      {
+        res = "Change Failed";
+      }
+      return new JsonResult(new { status = res });
+    }
+
+
+
 
 
   }

@@ -4,6 +4,7 @@
 @inject AccountService AccountService
 
 
+
 @{
 
   string username = User.FindFirst(ClaimTypes.Name).Value;
@@ -21,6 +22,10 @@
       roleArea = "Employees";
       roleController = "Employees";
       break;
+    case "Support Staff":
+      roleArea = "Support";
+      roleController = "Support";
+      break;
   };
 }
 
@@ -31,6 +36,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Test Net MVC</title>
+
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet"
@@ -125,6 +132,17 @@
             <a asp-controller="@roleController" asp-action="EmployeesRequest" class="nav-link">Requests</a>
           </li>
         }
+
+        @if (rolename.Contains("Support Staff"))
+        {
+
+          <li class="nav-item d-none d-sm-inline-block">
+            <a asp-controller="@roleController" asp-action="SupportRequest" class="nav-link">My
+              Requests</a>
+          </li>
+        }
+
+
       </ul>
 
       <ul class="navbar-nav">
@@ -143,7 +161,7 @@
       <!-- Brand Logo -->
       <a asp-controller="@roleController" asp-area="@roleArea" asp-action="Dashboard" class="brand-link">
         <img src="~/images/ASP.png" alt="MVC Logo" class="brand-image img-circle elevation-3" style="opacity: 0.8" />
-        <span class="brand-text font-weight-light">Test Net MVC</span>
+        <span class="brand-text font-weight-light">Net MVC</span>
       </a>
 
       <!-- Sidebar -->
@@ -155,7 +173,8 @@
             <img src="~/images/@account.Photo" class="img-circle elevation-2" alt="User Image" />
           </div>
           <div class="info">
-            <a asp-area="@roleArea" asp-controller="@roleController" asp-action="Dashboard" class="d-block">
+            <a asp-area="@roleArea" asp-controller="@roleController" asp-action="Information"
+              asp-route-username="@username" class="d-block">
               @account.Fullname.ToUpper()
             </a>
           </div>
@@ -207,6 +226,16 @@
                       class="nav-link">
                       <i class="far fa-circle nav-icon"></i>
                       <p>Requests</p>
+                    </a>
+                  </li>
+                }
+
+                @if (rolename.Contains("Support Staff"))
+                {
+                  <li class="nav-item">
+                    <a asp-controller="@roleController" asp-action="SupportRequest" asp-route-page=@(1) class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>My Requests</p>
                     </a>
                   </li>
                 }

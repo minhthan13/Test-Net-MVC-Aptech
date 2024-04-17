@@ -1,16 +1,15 @@
 @using TestNetMVC.Models
 @using TestNetMVC.Services
-@model Employee
+
 @inject RequestService RequestService
+
+@inject AccountService AccountService
 
 @{
 
-
-  var requests = RequestService.FindRequestEmployeeSubmitId(Model.Id);
-
-
+  var requests = Model.requests;
+  var account = Model.account;
 }
-
 
 <div class="table-responsive">
   <table class="table table-hover text-nowrap">
@@ -41,9 +40,17 @@
           <td>@r.Priority.PriorityName</td>
           <td><i><b>@(r.EmployeeIdHandlingNavigation != null ? r.EmployeeIdHandlingNavigation.Username : "none")</b></i>
           </td>
-          <td>@r.Description</td>
+          <td class="text-break">@r.Description</td>
           <td>
-            @await Html.PartialAsync("~/Areas/Shared/Partials/_ListEmployeeHandlePartial.cshtml", r.Id)
+            <select class="AjaxSelectSupport custom-select fs-2" data-requestId="@r.Id" style="width: max-content;">
+              <option value="-1" selected>Employee</option>
+              @foreach (var a in AccountService.FindEmployeeSupport())
+              {
+
+                <option value="@a.Id">@a.Username</option>
+              }
+            </select>
+
           </td>
         </tr>
       }
@@ -53,3 +60,23 @@
     </tbody>
   </table>
 </div>
+<script>
+  $(document).ready(function () {
+    $('.AjaxSelectSupport').change(function () {
+
+      var requestId = $(this).attr('data-requestId');
+      console.log(">>request id = " + requestId);
+      var ESuppId = $(this).val();
+      $.ajax({
+        type: 'GET',
+        url: '/ajax/ChangeHandleRequest',
+        data: { ESuppId, requestId },
+        success: function (res) {
+          console.log(res);
+        }
+      });
+    });
+  });
+
+
+</script>

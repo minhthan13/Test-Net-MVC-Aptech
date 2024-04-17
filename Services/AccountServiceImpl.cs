@@ -58,6 +58,34 @@ namespace TestNetMVC.Services
       return db.Employees.Where(e => e.Roles.Any(r => r.RoleName.Contains("Support Staff"))).ToList();
     }
 
+    public bool ActiveAcount(string username, bool isChecked)
+    {
+      var account = FindByUsername(username);
+      account.Status = isChecked;
+      try
+      {
+        db.Entry(account).State = EntityState.Modified;
+        return db.SaveChanges() > 0;
+      }
+      catch (System.Exception)
+      {
+        return false;
+      }
 
+    }
+
+
+    public bool EditAccount(Employee employee)
+    {
+      try
+      {
+        db.Entry(employee).State = EntityState.Modified;
+        return db.SaveChanges() > 0;
+      }
+      catch (System.Exception)
+      {
+        return false;
+      }
+    }
   }
 }

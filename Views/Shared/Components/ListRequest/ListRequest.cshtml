@@ -26,6 +26,13 @@
       roleRequestAction = "EmployeesRequest";
       requestsCount = RequestService.FindRequestEmployeeSubmitId(id).Count();
       break;
+
+    case "Support Staff":
+      roleArea = "Support";
+      roleController = "Support";
+      roleRequestAction = "SupportRequest";
+      requestsCount = RequestService.FindRequestEmployeeHandleId(id).Count();
+      break;
   };
   if (requestsCount % 5 != 0)
   {
@@ -77,8 +84,15 @@
               <th>Title</th>
               <th>Sent Date</th>
               <th>Priority</th>
-              <th>Handle</th>
-              <th>Submit</th>
+
+              @if (roleuser != "Support Staff")
+              {
+                <th>Handler</th>
+              }
+              @if (roleuser != "Staff")
+              {
+                <th>Sender</th>
+              }
               <th>Description</th>
             </tr>
           </thead>
@@ -95,8 +109,22 @@
 
                 <td>@r.SentDate.ToString("dd-MM-yyyy")</td>
                 <td>@r.Priority.PriorityName</td>
-                <td>@(r.EmployeeIdHandlingNavigation != null ? r.EmployeeIdHandlingNavigation.Username : "none")</td>
-                <td>@r.EmployeeIdSubmitNavigation.Username</td>
+                @if (roleuser != "Support Staff")
+                {
+                  <td>
+                    <b>
+                      @(r.EmployeeIdHandlingNavigation != null ? r.EmployeeIdHandlingNavigation.Username : "none")
+                    </b>
+                  </td>
+                }
+                @if (roleuser != "Staff")
+                {
+                  <td><i>
+
+                      @r.EmployeeIdSubmitNavigation.Username
+                    </i>
+                  </td>
+                }
                 <td>@r.Description</td>
               </tr>
             }
@@ -107,8 +135,12 @@
 
 
       </div>
+
+
+
+
+      <!-- /Pagination -->
       <hr>
-      <!-- /.card-body -->
       <div class="row justify-content-center">
 
         <ul class="pagination pagination-lg">
@@ -119,6 +151,8 @@
           }
         </ul>
       </div>
+
+
 
 
     </div>

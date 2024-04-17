@@ -33,31 +33,43 @@
 <div class="card-body table-responsive p-0">
 
 
-  <table class="table table-hover text-nowrap">
+  <table class="table table-hover text-nowrap text-center" id="tableEmployee">
     <thead>
       <tr>
         <th>#</th>
         <th>Username</th>
         <th>Fullname</th>
         <th>Date Of Birth</th>
-        <th>Status</th>
+        <th>Active</th>
         <th>Role</th>
+        <th>Requests</th>
       </tr>
     </thead>
     <tbody>
       @foreach (var a in accounts.OrderBy(a => a.Status))
       {
-        <tr class="rowdata" data-toggle="modal" data-target="#EmployeeInfoModal" data-employee-username="@a.Username">
+
+        <tr class="rowdata">
           <td>@(i++)</td>
           <td>@a.Username</td>
           <td>@a.Fullname</td>
           <td><span class="tag tag-success">@a.Dob.ToString("dd/MM/yyyy")</span></td>
-          <td><i>@(a.Status ? "Active" : "Pending")</i></td>
+          <td>
+            <input type="checkbox" class="EmployeeActive" @(a.Status ? "checked" : "")
+              data-employee-username="@a.Username">
+          </td>
           @foreach (var role in a.Roles)
           {
             <td>@role.RoleName</td>
           }
+          <td>
+            <span class="employeeRequest" data-employee-username="@a.Username" data-toggle="modal"
+              data-target="#EmployeeInfoModal" style="cursor: pointer;">
+              <b> @a.RequestEmployeeIdSubmitNavigations.Count</b>
+            </span>
+          </td>
         </tr>
+
       }
     </tbody>
   </table>
@@ -65,11 +77,12 @@
 
 
 
-<script src="~/lib/Template/plugins/jquery/jquery-3.7.1.min.js"></script>
 
 <script>
   $(document).ready(function () {
-    $('.rowdata').click(function () {
+
+    $('#tableEmployee .employeeRequest').click(function () {
+
       var employeeUsername = $(this).data('employee-username');
       $("#TitleModalUsername").html(employeeUsername);
       // Sử dụng Ajax để gửi employeeUsername 
@@ -85,8 +98,25 @@
     });
     $('#EmployeeInfoModal .close').click(function () {
       $('#EmployeeInfoModal .modal-body').empty();
+    });
+    // ========
+    $('.EmployeeActive').change(function () {
+      var isChecked = $(this).prop('checked');
+      var username = $(this).data('employee-username');
+      $.ajax({
+        type: 'GET',
+        url: '/ajax/ActiveAccount',
+        data: { username, isChecked },
+        success: function (res) {
+          console.log(res);
+        }
+      });
+    });
+    // ========
 
-    })
+
+
+
 
   });
 </script>
@@ -108,6 +138,8 @@
         <!-- ajax response -->
       </div>
       <div class="modal-footer">
+        <a class="btn btn-primary" asp-area="Admin" asp-controller="Admin" asp-action="Employees">Save</a>
+
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>

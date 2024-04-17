@@ -15,6 +15,8 @@ namespace TestNetMVC.Services
     public bool AddNewEmployee(Employee employee);
     public List<Employee> FindEmployeeSupport();
 
+    public bool ActiveAcount(string username, bool isChecked);
 
+    public bool EditAccount(Employee employee);
   }
 }
