@@ -18,4 +18,4 @@
 
 # Toastify
 
-    [Toastify Library](https://codewithmukesh.com/blog/toast-notifications-in-aspnet-core/)
+[(https://codewithmukesh.com/blog/toast-notifications-in-aspnet-core/)][Toastify Library]
