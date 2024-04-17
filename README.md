@@ -8,6 +8,8 @@
   dotnet add package Microsoft.EntityFrameworkCore.Proxies
   dotnet add package BCrypt.Net-Core
   dotnet add package Newtonsoft.Json
+
+  dotnet add package AspNetCoreHero.ToastNotification --version 1.1.0
 ```
 
 # Database
@@ -16,4 +18,4 @@
 
 # Toastify
 
-    [Toastify Libary](https://codewithmukesh.com/blog/toast-notifications-in-aspnet-core/)
+    [Toastify Library](https://codewithmukesh.com/blog/toast-notifications-in-aspnet-core/)
