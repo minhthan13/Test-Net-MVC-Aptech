@@ -26,16 +26,16 @@
 <div class="card-body table-responsive p-0">
 
 
-  <table class="table table-hover text-nowrap text-center" id="tableEmployee">
+  <table class="table table-hover table-bordered text-nowrap text-center" id="tableEmployee">
     <thead>
-      <tr>
+      <tr class="bg-info">
         <th>#</th>
         <th>Username</th>
         <th>Fullname</th>
         <th>Date Of Birth</th>
         <th>Active</th>
         <th>Role</th>
-        <th>Requests</th>
+        <th>Request Sent</th>
       </tr>
     </thead>
     <tbody>
@@ -43,7 +43,12 @@
       {
 
         <tr class="rowdata">
-          <td>@(i++)</td>
+          <td>
+            <strong>
+
+              @(i++)
+            </strong>
+          </td>
           <td class="myUsername @(a.Status? "font-weight-bold":"")">@a.Username</td>
           <td>@a.Fullname</td>
           <td>@a.Dob.ToString("dd/MM/yyyy")</td>
@@ -52,11 +57,11 @@
               data-employee-username="@a.Username">
           </td>
           <td>@a.Roles.First().RoleName</td>
-          <td>
-            <span class="employeeRequest" data-employee-username="@a.Username" data-toggle="modal"
-              data-target="#EmployeeInfoModal" style="cursor: pointer;">
-              <b> @a.RequestEmployeeIdSubmitNavigations.Count</b>
-            </span>
+          <td class="employeeRequest" data-employee-username="@a.Username" data-toggle="modal"
+            data-target="#EmployeeInfoModal" style="cursor: pointer;">
+
+            <strong> @a.RequestEmployeeIdSubmitNavigations.Count</strong>
+
           </td>
         </tr>
 

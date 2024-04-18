@@ -39,13 +39,12 @@ namespace TestNetMVC.Controllers
     {
 
       var account = accountService.FindByUsername(username);
-      var requests = requestService.FindRequestEmployeeSubmitId(account.Id).OrderByDescending(r =>
-  r.EmployeeIdHandling);
+      var requests = requestService.FindRequestEmployeeSubmitId(account.Id).OrderByDescending(r => r.EmployeeIdHandling);
 
-      return PartialView("~/Areas/Shared/Modals/_RequestSubmitModal.cshtml", new { requests, account });
+      var employeeSupport = accountService.FindEmployeeSupport();
+
+      return PartialView("~/Areas/Shared/Modals/_RequestSubmitModal.cshtml", new { requests, account, employeeSupport });
     }
-
-
 
     [Route("ActiveAccount")]
     public IActionResult ActiveAccount(string username, bool isChecked)
@@ -75,16 +74,26 @@ namespace TestNetMVC.Controllers
       if (requestService.ChangeHandleRequest(ESuppId, requestId))
       {
         res = "Change Suscces";
+        notyf.Success("Change Suscces");
       }
       else
       {
         res = "Change Failed";
+        notyf.Error("Change Failed");
       }
       return new JsonResult(new { status = res });
     }
 
 
+    [Route("Filter")]
+    public IActionResult SearchByDate(string fromDate, string toDate, int priorityId)
+    {
 
+      var requests = requestService.FilterRequest(fromDate, toDate, priorityId);
+
+
+      return new JsonResult(requests);
+    }
 
 
   }

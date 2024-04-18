@@ -23,7 +23,7 @@ namespace TestNetMVC.Views.Shared.Components.ListRequest
       var requests = new List<Request>();
 
 
-      int PageSize = 5;
+      int PageSize = 10;
       var Take = PageSize;
       var skip = (page - 1) * PageSize;
       switch (roleName)

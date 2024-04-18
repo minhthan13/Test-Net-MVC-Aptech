@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -24,10 +25,7 @@ namespace TestNetMVC.Services
       return db.Requests.Find(RequestId);
     }
 
-    public List<Request> FindByPriorityId(int PriorityId)
-    {
-      return db.Requests.Where(r => r.PriorityId == PriorityId).ToList();
-    }
+
 
     public List<Request> FindRequestEmployeeHandleId(int EmployeesId)
     {
@@ -75,6 +73,81 @@ namespace TestNetMVC.Services
 
     }
 
+
+    public List<Request> FindByPriorityId(int PriorityId)
+    {
+      if (PriorityId == -1)
+      {
+        return db.Requests.ToList();
+      }
+      else
+      {
+        return db.Requests.Where(r => r.PriorityId == PriorityId).ToList();
+      }
+    }
+    public List<Request> FindByDates(string from, string to)
+    {
+      DateTime start = DateTime.ParseExact(from, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+      DateTime end = DateTime.ParseExact(to, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+      return db.Requests.Where(p => p.SentDate >= start && p.SentDate <= end).ToList();
+    }
+    public dynamic FilterRequest(string fromDate, string toDate, int priorityId)
+    {
+      // Khởi tạo một danh sách để lưu trữ kết quả lọc
+      var resRequests = new List<Request>();
+
+      // Kiểm tra nếu có ngày bắt đầu (fromDate) được cung cấp
+      if (!string.IsNullOrEmpty(fromDate))
+      {
+        // Chuyển đổi fromDate thành đối tượng DateTime
+        DateTime start = DateTime.ParseExact(fromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+
+        // Lọc các yêu cầu có ngày gửi lớn hơn hoặc bằng fromDate
+        resRequests = db.Requests.Where(p => p.SentDate >= start).ToList();
+      }
+
+      // Kiểm tra nếu có ngày kết thúc (toDate) được cung cấp
+      if (!string.IsNullOrEmpty(toDate))
+      {
+        // Chuyển đổi toDate thành đối tượng DateTime
+        DateTime end = DateTime.ParseExact(toDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+
+        // Nếu đã có các yêu cầu được lọc từ trước, tiếp tục lọc trong phạm vi đó
+        if (resRequests.Any())
+        {
+          resRequests = resRequests.Where(p => p.SentDate <= end).ToList();
+        }
+        else
+        {
+          // Nếu không có yêu cầu nào được lọc trước đó, lọc các yêu cầu có ngày gửi nhỏ hơn hoặc bằng toDate
+          resRequests = db.Requests.Where(p => p.SentDate <= end).ToList();
+        }
+      }
+
+      // Kiểm tra nếu có priorityId được cung cấp và nếu có yêu cầu đã được lọc trước đó
+      if (priorityId != -1 && resRequests.Any())
+      {
+        // Lọc các yêu cầu trong phạm vi đã được lọc trước đó và có priorityId tương ứng
+        resRequests = resRequests.Where(p => p.PriorityId == priorityId).ToList();
+      }
+      else if (priorityId != -1)
+      {
+        // Nếu không có yêu cầu nào được lọc trước đó, lọc tất cả các yêu cầu có priorityId tương ứng
+        resRequests = db.Requests.Where(p => p.PriorityId == priorityId).ToList();
+      }
+
+      // Trả về danh sách các yêu cầu đã được lọc
+      return resRequests.Select(r => new
+      {
+        title = r.Title,
+        sentDate = r.SentDate.ToString("dd-MM-yyyy"),
+        priorityName = r.Priority.PriorityName,
+        description = r.Description,
+        handler = r?.EmployeeIdHandlingNavigation?.Username ?? "none",
+        sender = r.EmployeeIdSubmitNavigation.Username
+      }).OrderBy(r => r.handler).ToList();
+
+    }
 
   }
 }

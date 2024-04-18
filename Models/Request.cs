@@ -29,20 +29,18 @@ public partial class Request
 
   [ForeignKey("EmployeeIdHandling")]
   [InverseProperty("RequestEmployeeIdHandlingNavigations")]
-  [JsonIgnore]
 
   public virtual Employee? EmployeeIdHandlingNavigation { get; set; }
 
   [ForeignKey("EmployeeIdSubmit")]
   [InverseProperty("RequestEmployeeIdSubmitNavigations")]
-  [JsonIgnore]
 
 
   public virtual Employee EmployeeIdSubmitNavigation { get; set; } = null!;
 
   [ForeignKey("PriorityId")]
   [InverseProperty("Requests")]
-  [JsonIgnore]
+
 
   public virtual Priority Priority { get; set; } = null!;
 

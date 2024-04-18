@@ -19,6 +19,9 @@ namespace TestNetMVC.Services
 
 
     public bool ChangeHandleRequest(int ESuppId, int requestId);
+    public List<Request> FindByDates(string from, string to);
+
+    public dynamic FilterRequest(string fromDate, string toDate, int priorityId);
 
   }
 }

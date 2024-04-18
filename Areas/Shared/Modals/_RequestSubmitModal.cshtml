@@ -9,12 +9,13 @@
 
   var requests = Model.requests;
   var account = Model.account;
+  var employeeSupport = Model.employeeSupport;
 }
 
 <div class="table-responsive">
-  <table class="table table-hover text-nowrap">
+  <table class="table table-hover table-bordered text-nowrap text-center">
     <thead>
-      <tr>
+      <tr class="bg-info">
         <th>#</th>
         <th>Title</th>
         <th>Sent Date</th>
@@ -43,11 +44,11 @@
           <td class="text-break">@r.Description</td>
           <td>
             <select class="AjaxSelectSupport custom-select fs-2" data-requestId="@r.Id" style="width: max-content;">
-              <option value="-1" selected>Employee</option>
-              @foreach (var a in AccountService.FindEmployeeSupport())
+              <!option value="-1" selected>supporter</!option>
+              @foreach (var a in employeeSupport)
               {
 
-                <option value="@a.Id">@a.Username</option>
+                <!option value="@a.Id">@a.Username</!option>
               }
             </select>
 
@@ -59,24 +60,25 @@
 
     </tbody>
   </table>
-</div>
-<script>
-  $(document).ready(function () {
-    $('.AjaxSelectSupport').change(function () {
 
-      var requestId = $(this).attr('data-requestId');
-      console.log(">>request id = " + requestId);
-      var ESuppId = $(this).val();
-      $.ajax({
-        type: 'GET',
-        url: '/ajax/ChangeHandleRequest',
-        data: { ESuppId, requestId },
-        success: function (res) {
-          console.log(res);
-        }
+  <script>
+    $(document).ready(function () {
+      $('.AjaxSelectSupport').change(function () {
+
+        var requestId = $(this).attr('data-requestId');
+        console.log(">>request id = " + requestId);
+        var ESuppId = $(this).val();
+        $.ajax({
+          type: 'GET',
+          url: '/ajax/ChangeHandleRequest',
+          data: { ESuppId, requestId },
+          success: function (res) {
+            console.log(res);
+          }
+        });
       });
     });
-  });
 
 
-</script>
+  </script>
+</div>
