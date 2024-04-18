@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -21,10 +22,12 @@ namespace TestNetMVC.Areas.Employees.Controllers
   {
     private readonly RequestService requestService;
     private readonly AccountService accountService;
-    public EmployeesController(RequestService _requestService, AccountService _accountService)
+    private readonly INotyfService notyf;
+    public EmployeesController(RequestService _requestService, AccountService _accountService, INotyfService _notyf)
     {
       requestService = _requestService;
       accountService = _accountService;
+      notyf = _notyf;
     }
     [Route("Welcome")]
     public IActionResult Welcome()
@@ -62,10 +65,12 @@ namespace TestNetMVC.Areas.Employees.Controllers
       request.SentDate = DateTime.Now;
       if (requestService.AddNewRequest(request))
       {
+        notyf.Success("Add New Request Success !!!");
         return RedirectToAction("EmployeesRequest");
       }
       else
       {
+        notyf.Error("Add New Request Failed !!!");
         return RedirectToAction("EmployeesRequest");
       }
 

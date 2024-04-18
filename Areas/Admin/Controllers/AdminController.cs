@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -25,11 +26,13 @@ namespace TestNetMVC.Areas.Admin.Controllers
     private readonly AccountService accountService;
     private readonly RoleService roleService;
     private readonly IWebHostEnvironment environment;
-    public AdminController(AccountService _accountService, RoleService _roleService, IWebHostEnvironment _environment)
+    private readonly INotyfService notyf;
+    public AdminController(AccountService _accountService, RoleService _roleService, IWebHostEnvironment _environment, INotyfService _notyf)
     {
       accountService = _accountService;
       environment = _environment;
       roleService = _roleService;
+      notyf = _notyf;
     }
 
     [Route("Dashboard")]
@@ -76,12 +79,13 @@ namespace TestNetMVC.Areas.Admin.Controllers
 
       if (accountService.AddNewEmployee(employee))
       {
-        TempData["msg"] = "Add Employee success !!!";
+
+        notyf.Success("Add New Employee success !!!");
         return RedirectToAction("Employees");
       }
       else
       {
-        TempData["msg"] = "Add Employee Failed !!!";
+        notyf.Error("Add New Employee Failed !!!");
         return RedirectToAction("Employees");
 
       }
@@ -112,10 +116,12 @@ namespace TestNetMVC.Areas.Admin.Controllers
         account.Password = BCrypt.Net.BCrypt.HashPassword(nPassword);
         if (accountService.EditAccount(account))
         {
+          notyf.Success("Change Password Success !!!");
           return RedirectToAction("Information", new { username });
         }
         else
         {
+          notyf.Error("Change Password Failed");
           return RedirectToAction("Information", new { username });
         }
       }

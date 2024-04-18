@@ -87,5 +87,18 @@ namespace TestNetMVC.Services
         return false;
       }
     }
+
+    public dynamic FindAll2()
+    {
+      return db.Employees.Select(e => new
+      {
+        Username = e.Username,
+        Fullname = e.Fullname,
+        Status = e.Status,
+        RoleName = e.Roles.First().RoleName,
+        Dob = e.Dob.ToString("dd/MM/yyyy"),
+        RequestCount = e.RequestEmployeeIdSubmitNavigations.Count().ToString(),
+      }).OrderBy(e => e.Status).ToList();
+    }
   }
 }

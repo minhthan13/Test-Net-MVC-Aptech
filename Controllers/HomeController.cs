@@ -52,7 +52,7 @@ public class HomeController : Controller
       var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
       var claimsPrincial = new ClaimsPrincipal(claimsIdentity);
       await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincial);
-
+      notyf.Success($"Welcome Back {account.Username.ToUpper()}");
 
       var roleName = account.Roles.First().RoleName;
       switch (roleName)
@@ -60,19 +60,17 @@ public class HomeController : Controller
         case "Admin":
           return RedirectToAction("Dashboard", "Admin", new { area = "Admin" });
         case "Staff":
-
-          notyf.Success("Login success");
           return RedirectToAction("Welcome", "Employees", new { area = "Employees" });
         case "Support Staff":
           return RedirectToAction("Welcome", "Support", new { area = "Support" });
+        default:
+          return RedirectToAction("Welcome");
       }
-      return RedirectToAction("Welcome");
-
     }
     else
     {
-      TempData["msg"] = "invalid";
-      return View("Login");
+      notyf.Error("Login Failed, Please try again !!");
+      return RedirectToAction("Login");
     }
 
   }
@@ -102,15 +100,13 @@ public class HomeController : Controller
     account.Dob = employee.Dob;
     account.Fullname = employee.Fullname;
 
-
-    string a = "";
     if (accountService.EditAccount(account))
     {
-      a = "success";
+      notyf.Success("Change Account Success !!!");
     }
     else
     {
-      a = "failed";
+      notyf.Error("Change Account Failed !!!");
     }
     return ViewComponent("Welcome");
   }

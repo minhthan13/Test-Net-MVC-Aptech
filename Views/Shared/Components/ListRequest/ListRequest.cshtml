@@ -1,5 +1,7 @@
 @using TestNetMVC.Models
-@inject TestNetMVC.Services.RequestService RequestService
+@using TestNetMVC.Services
+@inject RequestService RequestService
+@inject PriorityService PriorityService
 @using System.Security.Claims
 @{
   Layout = "~/Areas/_Layout.cshtml";
@@ -45,37 +47,60 @@
 
 }
 
-
+<div class="row justify-content-center"><b class="h1">List Request</b></div>
 <div class="row">
   <div class="col-12">
     <div class="card">
-      <div class="card-header">
-        <h2 class="card-title"><b>Requests</b></h2>
+      <div class="card-header row justify-content-between">
 
-        <div class="card-tools d-flex ">
-          @if (roleuser == "Staff")
-          {
-            <div class="modal-add-request mr-2">
-              <button type="button" class="btn btn-info" data-toggle="modal" data-target="#AddNewRequest">
-                Add New Requests
-              </button>
+        <div class="modal-add-request ml-4 col-5 @(roleuser != "Staff" ? "invisible": "visible")">
+          <button type="button" class="btn btn-info" data-toggle="modal" data-target="#AddNewRequest">
+            Add New Requests
+          </button>
 
-              @(await Html.PartialAsync("~/Areas/Shared/Modals/_AddNewRequestModal.cshtml", request,
-                  new ViewDataDictionary(ViewData) { { "username", username } }))
+          @(await Html.PartialAsync("~/Areas/Shared/Modals/_AddNewRequestModal.cshtml", request,
+              new ViewDataDictionary(ViewData) { { "username", username } }))
+        </div>
 
-            </div>
-          }
-          <div class="input-group input-group-sm align-content-center" style="width: 150px;">
-            <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
-            <div class="input-group-append">
-              <button type="submit" class="btn btn-default">
-                <i class="fas fa-search"></i>
-              </button>
+        <!--Form Filter--->
+        <div id="filter-tools" class="d-flex col-6 row justify-content-end">
+
+          <div class="form-group align-content-center m-0 ml-2">
+            <label class="sr-only" for="fromDate">From</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <div class="input-group-text">From</div>
+              </div>
+              <input type="date" class="form-control" id="fromDate">
             </div>
           </div>
+          <div class="form-group  align-content-center m-0 ml-2">
+            <label class="sr-only" for="toDate">To</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <div class="input-group-text">To</div>
+              </div>
+              <input type="date" class="form-control" id="toDate">
+            </div>
+          </div>
+          <!-- /.Priority -->
+          <div class="input-group-prepend ml-5">
+            <select class="custom-select" id="fiterPriority" name="priorityId">
+              <!option value="-1" selected>Choose Priority</!option>
+              @foreach (var pri in PriorityService.FindAll())
+              {
+                <!option value="@pri.Id">@pri.PriorityName</!option>
+              }
+            </select>
+
+            <label class="input-group-text" for="inputGroupSelect01">Priority</label>
+          </div>
+
         </div>
+
+        <!--Form Filter--->
+
       </div>
-      <!-- /.card-header -->
       <div class="card-body p-0" style="height: 300px;">
         <table class="table table-hover text-nowrap">
           <thead>
