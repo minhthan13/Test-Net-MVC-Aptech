@@ -22,6 +22,9 @@ namespace TestNetMVC.Services
     public List<Request> FindByDates(string from, string to);
 
     public dynamic FilterRequest(string fromDate, string toDate, int priorityId);
+    public dynamic GetRequestPaginate(int id, int skipItem, int pageSize);
+
+    public int GetTotalRequestCount(int userId);
 
   }
 }

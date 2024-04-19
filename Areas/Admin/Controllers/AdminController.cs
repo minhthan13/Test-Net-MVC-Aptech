@@ -18,8 +18,8 @@ namespace TestNetMVC.Areas.Admin.Controllers
   [Authorize(Roles = "Admin")]
 
   [Area("Admin")]
+  [Route("")]
   [Route("Admin")]
-  [Route("Admin/Admin")]
   public class AdminController : Controller
   {
 
@@ -92,12 +92,13 @@ namespace TestNetMVC.Areas.Admin.Controllers
     }
 
     [Route("Requests")]
-    [Route("Requests/{page?}")]
-    public IActionResult Requests(int? page)
+    [Route("Requests/{pages}")]
+    public IActionResult Requests(int? pages)
     {
-      if (page == null)
+      var page = 1;
+      if (pages != null)
       {
-        page = 1;
+        page = (int)pages;
       }
       var username = User.FindFirst(ClaimTypes.Name).Value;
       var roleName = User.FindFirst(ClaimTypes.Role).Value;
@@ -127,6 +128,17 @@ namespace TestNetMVC.Areas.Admin.Controllers
       }
 
       return RedirectToAction("Information", new { username });
+    }
+
+
+
+
+    [Route("RequestsPaginate")]
+    public IActionResult RequestsPaginate()
+    {
+      var username = User.FindFirst(ClaimTypes.Name).Value;
+      return ViewComponent("RequestPaginate", new { username });
+
     }
 
   }

@@ -47,5 +47,14 @@ namespace TestNetMVC.Areas.Support.Controllers
     }
 
 
+    [Route("RequestsPaginate")]
+    public IActionResult RequestsPaginate()
+    {
+      var username = User.FindFirst(ClaimTypes.Name).Value;
+      return ViewComponent("RequestPaginate", new { username });
+
+    }
+
+
   }
 }

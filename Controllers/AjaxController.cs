@@ -7,6 +7,7 @@ using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using TestNetMVC.Models;
 using TestNetMVC.Services;
 
 namespace TestNetMVC.Controllers
@@ -95,6 +96,19 @@ namespace TestNetMVC.Controllers
       return new JsonResult(requests);
     }
 
+
+    [Route("getRequestPaginate")]
+    public IActionResult getRequestPaginate(int userId, int page, int pageSize)
+    {
+
+      var skipItem = (page - 1) * pageSize;
+      var requests = requestService.GetRequestPaginate(userId, skipItem, pageSize);
+
+
+      var totalItems = requestService.GetTotalRequestCount(userId);
+      var totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+      return new JsonResult(new { requests, totalItems, totalPages });
+    }
 
   }
 }

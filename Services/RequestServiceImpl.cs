@@ -149,5 +149,56 @@ namespace TestNetMVC.Services
 
     }
 
+    public dynamic GetRequestPaginate(int id, int skipItem, int pageSize)
+    {
+      var RoleUser = db.Employees.Find(id).Roles.FirstOrDefault().RoleName;
+      var resRequests = new List<Request>();
+      switch (RoleUser)
+      {
+        case "Admin":
+          resRequests = FindAll().Skip(skipItem).Take(pageSize).ToList();
+          break;
+        case "Staff":
+          resRequests = FindRequestEmployeeSubmitId(id).Skip(skipItem).Take(pageSize).ToList();
+          break;
+        case "Support Staff":
+          resRequests = FindRequestEmployeeHandleId(id).Skip(skipItem).Take(pageSize).ToList();
+          break;
+        default:
+          resRequests = FindAll();
+          break;
+      }
+      return resRequests.Select(r => new
+      {
+        title = r.Title,
+        sentDate = r.SentDate.ToString("dd-MM-yyyy"),
+        priorityName = r.Priority.PriorityName,
+        description = r.Description,
+        handler = r?.EmployeeIdHandlingNavigation?.Username ?? "none",
+        sender = r.EmployeeIdSubmitNavigation.Username
+      }).OrderBy(r => r.handler).ToList();
+    }
+
+    public int GetTotalRequestCount(int userId)
+    {
+      var RoleUser = db.Employees.Find(userId).Roles.FirstOrDefault().RoleName;
+      var requestCount = 0;
+      switch (RoleUser)
+      {
+        case "Admin":
+          requestCount = FindAll().Count();
+          break;
+        case "Staff":
+          requestCount = FindRequestEmployeeSubmitId(userId).Count();
+          break;
+        case "Support Staff":
+          requestCount = FindRequestEmployeeHandleId(userId).Count();
+          break;
+        default:
+          requestCount = FindAll().Count(); ;
+          break;
+      }
+      return requestCount;
+    }
   }
 }

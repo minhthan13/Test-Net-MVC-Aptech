@@ -1,0 +1,161 @@
+@using System.Security.Claims
+
+@{
+  Layout = "~/Areas/_Layout.cshtml";
+  var userName = Model.account.name;
+  var userId = Model.account.id;
+  var userRole = Model.account.role;
+}
+
+<input type="hidden" value="@userId" id="userId">
+<input type="hidden" value="@userName" id="userName">
+<input type="hidden" value="@userRole" id="userRole">
+<script>
+  $(document).ready(function () {
+    let userId = $('#userId').val();
+    let roleUser = $('userRole').val();
+    $.ajax({
+      type: "GET",
+      url: "/ajax/getRequestPaginate",
+      data: { userId },
+      success: function (res) {
+        console.log(res);
+        fillToTable(res, roleUser);
+      }
+    });
+  });
+
+
+  function fillToTable(lists, roleUser) {
+    let s = "";
+    for (var i = 0; i < lists.length; i++) {
+      s += `
+      <tr>
+        <td><strong>${i + 1}</strong></td>
+        <td>${lists[i].title}</td>
+        <td>${lists[i].sentDate}</td>
+        <td>${lists[i].priorityName}</td>`;
+
+      if (roleUser != "Support Staff") {
+        s += `<td><strong>${lists[i].handler}</strong></td>`;
+      }
+
+      if (roleUser != "Staff") {
+        s += `<td><i>${lists[i].sender}</i></td>`;
+      }
+
+      s += `<td>${lists[i].description}</td>
+      </tr>`;
+    }
+    // end loop
+    $('#tableRequests tbody').html(s);
+  };
+
+</script>
+
+<script>
+  $(document).ready(function () {
+    let userId = $('#userId').val();
+    let roleUser = $('#userRole').val();
+    let currentPage = 1;
+    let itemsPerPage = 10;
+
+
+    $('#pangiateRow').on('click', 'a.page-link', function () {
+      currentPage = parseInt($(this).text()); // Cập nhật trang hiện tại
+      getRequestPaginate(userId, currentPage, itemsPerPage, roleUser); // Gọi hàm để lấy dữ liệu cho trang mới
+    });
+
+    getRequestPaginate(userId, currentPage, itemsPerPage, roleUser); // Lấy dữ liệu cho trang đầu tiên
+  });
+  // call AJAX
+  function getRequestPaginate(userId, page, pageSize, roleUser) {
+    $.ajax({
+      type: "GET",
+      url: "/ajax/getRequestPaginate",
+      data: { userId, page, pageSize },
+      success: function (res) {
+        console.log(res);
+        fillToTable(res.requests, roleUser);
+        updatePagination(res.totalPages, page);
+      }
+    });
+  }
+
+  function fillToTable(lists, roleUser) {
+    let s = "";
+    for (var i = 0; i < lists.length; i++) {
+      s += `
+      <tr>
+        <td><strong>${i + 1}</strong></td>
+        <td>${lists[i].title}</td>
+        <td>${lists[i].sentDate}</td>
+        <td>${lists[i].priorityName}</td>`;
+
+      if (roleUser != "Support Staff") {
+        s += `<td><strong>${lists[i].handler}</strong></td>`;
+      }
+
+      if (roleUser != "Staff") {
+        s += `<td><i>${lists[i].sender}</i></td>`;
+      }
+
+      s += `<td>${lists[i].description}</td>
+      </tr>`;
+    }
+    // Kết thúc vòng lặp
+
+    $('#tableRequests tbody').html(s);
+  };
+
+  function updatePagination(totalPages, inPageActive) {
+    let pagination = $('#pangiateRow .pagination');
+    pagination.empty(); // Xóa các nút phân trang cũ
+    for (let i = 1; i <= totalPages; i++) {
+      pagination.append(`<li class="page-item ${inPageActive == i ? "active" : ""}"><a class="page-link">${i}</a></li>`); // Thêm nút cho mỗi trang
+    }
+  }
+
+
+  //===============
+</script>
+<div class="container-fluid" id="boxRequest">
+  <div id="requestHeader" class="row justify-content-center align-content-center">
+    <div class="h1">@userName</div>
+  </div>
+
+
+  <!--TABLE-->
+
+
+  <div class="row justify-content-center">
+    <table class="table table-hover table-bordered text-center text-nowrap m-4" id="tableRequests">
+      <thead>
+        <tr class="bg-info">
+          <th>#</th>
+          <th>Title</th>
+          <th>Sent Date</th>
+          <th>Priority</th>
+
+          @if (userRole != "Support Staff")
+          {
+            <th>Handler</th>
+          }
+          @if (userRole != "Staff")
+          {
+            <th>Sender</th>
+          }
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<div class="row justify-content-center" id="pangiateRow">
+  <ul class="pagination pagination-lg"></ul>
+</div>

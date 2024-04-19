@@ -73,7 +73,14 @@ namespace TestNetMVC.Areas.Employees.Controllers
         notyf.Error("Add New Request Failed !!!");
         return RedirectToAction("EmployeesRequest");
       }
+    }
 
+
+    [Route("RequestsPaginate")]
+    public IActionResult RequestsPaginate()
+    {
+      var username = User.FindFirst(ClaimTypes.Name).Value;
+      return ViewComponent("RequestPaginate", new { username });
 
     }
   }
