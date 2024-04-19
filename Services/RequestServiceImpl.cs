@@ -34,7 +34,7 @@ namespace TestNetMVC.Services
 
     public List<Request> FindRequestEmployeeSubmitId(int EmployeesId)
     {
-      return db.Requests.Where(r => r.EmployeeIdSubmit == EmployeesId).OrderByDescending(r => r.EmployeeIdHandling).ToList();
+      return db.Requests.Where(r => r.EmployeeIdSubmit == EmployeesId).OrderByDescending(r => r.SentDate).ToList();
     }
 
 
@@ -82,7 +82,7 @@ namespace TestNetMVC.Services
       }
       else
       {
-        return db.Requests.Where(r => r.PriorityId == PriorityId).ToList();
+        return db.Requests.Where(r => r.PriorityId == PriorityId).OrderByDescending(r => r.SentDate).ToList();
       }
     }
     public List<Request> FindByDates(string from, string to)
@@ -91,10 +91,25 @@ namespace TestNetMVC.Services
       DateTime end = DateTime.ParseExact(to, "dd/MM/yyyy", CultureInfo.InvariantCulture);
       return db.Requests.Where(p => p.SentDate >= start && p.SentDate <= end).ToList();
     }
-    public dynamic FilterRequest(string fromDate, string toDate, int priorityId)
+    public dynamic FilterRequest(string fromDate, string toDate, int priorityId, string role, int employeeId)
     {
       // Khởi tạo một danh sách để lưu trữ kết quả lọc
       var resRequests = new List<Request>();
+      switch (role)
+      {
+        case "Admin":
+          resRequests = FindAll();
+          break;
+        case "Staff":
+          resRequests = FindRequestEmployeeSubmitId(employeeId);
+          break;
+        case "Support Staff":
+          resRequests = FindRequestEmployeeHandleId(employeeId);
+          break;
+        default:
+          resRequests = FindAll();
+          break;
+      }
 
       // Kiểm tra nếu có ngày bắt đầu (fromDate) được cung cấp
       if (!string.IsNullOrEmpty(fromDate))
@@ -103,7 +118,7 @@ namespace TestNetMVC.Services
         DateTime start = DateTime.ParseExact(fromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
 
         // Lọc các yêu cầu có ngày gửi lớn hơn hoặc bằng fromDate
-        resRequests = db.Requests.Where(p => p.SentDate >= start).ToList();
+        resRequests = resRequests.Where(p => p.SentDate >= start).ToList();
       }
 
       // Kiểm tra nếu có ngày kết thúc (toDate) được cung cấp
@@ -120,7 +135,7 @@ namespace TestNetMVC.Services
         else
         {
           // Nếu không có yêu cầu nào được lọc trước đó, lọc các yêu cầu có ngày gửi nhỏ hơn hoặc bằng toDate
-          resRequests = db.Requests.Where(p => p.SentDate <= end).ToList();
+          resRequests = resRequests.Where(p => p.SentDate <= end).ToList();
         }
       }
 
@@ -133,7 +148,7 @@ namespace TestNetMVC.Services
       else if (priorityId != -1)
       {
         // Nếu không có yêu cầu nào được lọc trước đó, lọc tất cả các yêu cầu có priorityId tương ứng
-        resRequests = db.Requests.Where(p => p.PriorityId == priorityId).ToList();
+        resRequests = resRequests.Where(p => p.PriorityId == priorityId).ToList();
       }
 
       // Trả về danh sách các yêu cầu đã được lọc
@@ -176,7 +191,7 @@ namespace TestNetMVC.Services
         description = r.Description,
         handler = r?.EmployeeIdHandlingNavigation?.Username ?? "none",
         sender = r.EmployeeIdSubmitNavigation.Username
-      }).OrderBy(r => r.handler).ToList();
+      }).ToList();
     }
 
     public int GetTotalRequestCount(int userId)

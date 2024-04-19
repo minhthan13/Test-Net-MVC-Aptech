@@ -1,5 +1,6 @@
 @using System.Security.Claims
-
+@using TestNetMVC.Services
+@inject PriorityService PriorityService
 @{
   Layout = "~/Areas/_Layout.cshtml";
   var userName = Model.account.name;
@@ -55,20 +56,44 @@
 
 <script>
   $(document).ready(function () {
+
+    //********* Paginate Logic
     let userId = $('#userId').val();
     let roleUser = $('#userRole').val();
     let currentPage = 1;
     let itemsPerPage = 10;
-
-
     $('#pangiateRow').on('click', 'a.page-link', function () {
       currentPage = parseInt($(this).text()); // Cập nhật trang hiện tại
       getRequestPaginate(userId, currentPage, itemsPerPage, roleUser); // Gọi hàm để lấy dữ liệu cho trang mới
     });
 
     getRequestPaginate(userId, currentPage, itemsPerPage, roleUser); // Lấy dữ liệu cho trang đầu tiên
+
+    //********* Paginate Logic
+
+
+    //********** filter Logic
+
+    $('#fromDate').datepicker({ dateFormat: "dd/mm/yy" });
+    $('#toDate').datepicker({ dateFormat: "dd/mm/yy" });
+
+    $('#fromDate, #toDate, #fiterPriority').change(function () {
+      let fromDate = $('#fromDate').val();
+      let toDate = $('#toDate').val();
+      let priorityId = $('#fiterPriority').val();
+      $.ajax({
+        type: "GET",
+        url: '/ajax/Filter',
+        data: { fromDate, toDate, priorityId },
+        success: function (res) {
+          fillToTable(res, roleUser);
+          updatePagination(1, 1);
+        },
+      });
+    });
+    //********** filter Logic
   });
-  // call AJAX
+  // call Request show table Ajax
   function getRequestPaginate(userId, page, pageSize, roleUser) {
     $.ajax({
       type: "GET",
@@ -78,6 +103,7 @@
         console.log(res);
         fillToTable(res.requests, roleUser);
         updatePagination(res.totalPages, page);
+
       }
     });
   }
@@ -111,8 +137,11 @@
   function updatePagination(totalPages, inPageActive) {
     let pagination = $('#pangiateRow .pagination');
     pagination.empty(); // Xóa các nút phân trang cũ
-    for (let i = 1; i <= totalPages; i++) {
-      pagination.append(`<li class="page-item ${inPageActive == i ? "active" : ""}"><a class="page-link">${i}</a></li>`); // Thêm nút cho mỗi trang
+
+    if (totalPages > 1) {
+      for (let i = 1; i <= totalPages; i++) {
+        pagination.append(`<li class="page-item ${inPageActive == i ? "active" : ""}"><a class="page-link">${i}</a></li>`); // Thêm nút cho mỗi trang
+      }
     }
   }
 
@@ -121,15 +150,82 @@
 </script>
 <div class="container-fluid" id="boxRequest">
   <div id="requestHeader" class="row justify-content-center align-content-center">
-    <div class="h1">@userName</div>
+    <div class="h1">Requests</div>
   </div>
+  <!--ADD NEW REQUEST  + FORM FILTER--->
+  <div class="row justify-content-start">
+    <!--Modal Add Request--->
+    <div class="modal-add-request ml-4 mb-2">
+      <button type="button" class="btn btn-info  @(userRole != "Staff" ?"invisible":"visible")" data-toggle="modal"
+        data-target="#AddNewRequest">
+        Add New Requests
+      </button>
 
+      @(await Html.PartialAsync("~/Areas/Shared/Modals/_AddNewRequestModal.cshtml", new ViewDataDictionary(ViewData) { {
+      "username", userName } }))
+    </div>
+    <!--Modal Add Request End--->
+
+
+
+
+  </div>
+  <!--ADD NEW REQUEST  + FORM FILTER--->
+  <div class="row ml-4">
+    <button class="btn btn-primary ml-n2" type="button" data-toggle="collapse" data-target="#filterDropdown"
+      aria-expanded="false" aria-controls="filterDropdown">
+      Filter
+    </button>
+
+
+  </div>
+  <div class="row ml-3 mt-2">
+    <div class="collapse row" id="filterDropdown">
+      <!--Form Filter--->
+      <div class="form-group align-content-center m-0 ml-2">
+        <label class="sr-only" for="fromDate">From</label>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <div class="input-group-text">From</div>
+          </div>
+          <input type="text" class="form-control" id="fromDate">
+        </div>
+      </div>
+      <!---->
+      <div class="form-group  align-content-center m-0 ml-2">
+        <label class="sr-only" for="toDate">To</label>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <div class="input-group-text">To</div>
+          </div>
+          <input type="text" class="form-control" id="toDate">
+        </div>
+      </div>
+
+
+      <!---->
+      <div class="input-group-prepend ml-2">
+        <select class="custom-select" id="fiterPriority" name="priorityId">
+          <!option value="-1" selected>Choose Priority</!option>
+          @foreach (var pri in PriorityService.FindAll())
+          {
+            <!option value="@pri.Id">@pri.PriorityName</!option>
+          }
+        </select>
+
+        <label class="input-group-text" for="fiterPriority">Priority</label>
+      </div>
+      <!--Clear-->
+      <a class="btn btn-warning ml-4" asp-action="RequestsPaginate">Clear All</a>
+      <!---->
+    </div>
+  </div>
 
   <!--TABLE-->
 
 
   <div class="row justify-content-center">
-    <table class="table table-hover table-bordered text-center text-nowrap m-4" id="tableRequests">
+    <table class="table table-hover table-bordered text-center text-nowrap m-4  " id="tableRequests">
       <thead>
         <tr class="bg-info">
           <th>#</th>

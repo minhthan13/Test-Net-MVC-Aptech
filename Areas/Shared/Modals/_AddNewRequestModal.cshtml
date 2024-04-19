@@ -1,10 +1,11 @@
 @using TestNetMVC.Services
+@using TestNetMVC.Models
 @inject AccountService AccountService
-@model TestNetMVC.Models.Request
 
 @{
   var username = ViewData["username"] as string;
   var account = AccountService.FindByUsername(username);
+  var request = new Request { };
 }
 
 <div class="modal" tabindex="-1" role="dialog" id="AddNewRequest">
@@ -21,18 +22,18 @@
           <div class="modal-body row d-flex justify-content-between flex-wrap">
             <div class="form-group col-5">
               <label for="Title">Title<span class="text-danger">*</span></label>
-              <input type="text" class="form-control" id="Title" placeholder="Title" asp-for="@Model.Title">
+              <input type="text" class="form-control" id="Title" placeholder="Title" asp-for="@request.Title">
             </div>
 
             <div class="form-group col-12">
               <label for="Description">Description<span class="text-danger">*</span></label>
               <textarea type="text" class="form-control" id="Description" placeholder="Description"
-                asp-for="@Model.Description" rows="10"></textarea>
+                asp-for="@request.Description" rows="10"></textarea>
             </div>
             <div class="form-group col-5">
               <label></label>
               <!-- /.List Priority -->
-              @await Html.PartialAsync("~/Areas/Shared/Partials/_ListPriorityPartial.cshtml", Model)
+              @await Html.PartialAsync("~/Areas/Shared/Partials/_ListPriorityPartial.cshtml")
               <!-- /.List Priority -->
 
             </div>
@@ -43,7 +44,7 @@
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
           </div>
         </div>
-        <input type="hidden" asp-for="@Model.EmployeeIdSubmit" value="@account.Id">
+        <input type="hidden" asp-for="@request.EmployeeIdSubmit" value="@account.Id">
       </form>
     </div>
   </div>

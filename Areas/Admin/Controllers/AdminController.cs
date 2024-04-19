@@ -18,8 +18,8 @@ namespace TestNetMVC.Areas.Admin.Controllers
   [Authorize(Roles = "Admin")]
 
   [Area("Admin")]
-  [Route("")]
   [Route("Admin")]
+  [Route("Admin/Admin")]
   public class AdminController : Controller
   {
 
@@ -47,7 +47,6 @@ namespace TestNetMVC.Areas.Admin.Controllers
       return ViewComponent("Welcome");
     }
 
-
     [Route("Information/{username}")]
     public IActionResult Information(string username)
     {
@@ -60,7 +59,13 @@ namespace TestNetMVC.Areas.Admin.Controllers
     {
       return View("Employees");
     }
+    [Route("Requests")]
+    public IActionResult RequestsPaginate()
+    {
+      var username = User.FindFirst(ClaimTypes.Name).Value;
+      return ViewComponent("RequestPaginate", new { username });
 
+    }
     [HttpPost]
     [Route("AddNewEmployee")]
     public IActionResult AddNewEmployee(Employee employee, int RoleId, IFormFile Photo)
@@ -91,21 +96,7 @@ namespace TestNetMVC.Areas.Admin.Controllers
       }
     }
 
-    [Route("Requests")]
-    [Route("Requests/{pages}")]
-    public IActionResult Requests(int? pages)
-    {
-      var page = 1;
-      if (pages != null)
-      {
-        page = (int)pages;
-      }
-      var username = User.FindFirst(ClaimTypes.Name).Value;
-      var roleName = User.FindFirst(ClaimTypes.Role).Value;
-      var user = accountService.FindByUsername(username);
-      return ViewComponent("ListRequest", new { EmployeeId = user.Id, roleName, page });
 
-    }
 
     [HttpPost]
     [Route("ChangePassword")]
@@ -133,13 +124,7 @@ namespace TestNetMVC.Areas.Admin.Controllers
 
 
 
-    [Route("RequestsPaginate")]
-    public IActionResult RequestsPaginate()
-    {
-      var username = User.FindFirst(ClaimTypes.Name).Value;
-      return ViewComponent("RequestPaginate", new { username });
 
-    }
 
   }
 }

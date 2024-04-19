@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Mvc;
@@ -87,10 +88,12 @@ namespace TestNetMVC.Controllers
 
 
     [Route("Filter")]
-    public IActionResult SearchByDate(string fromDate, string toDate, int priorityId)
+    public IActionResult Filter(string fromDate, string toDate, int priorityId)
     {
-
-      var requests = requestService.FilterRequest(fromDate, toDate, priorityId);
+      var role = User.FindFirst(ClaimTypes.Role).Value;
+      var username = User.FindFirst(ClaimTypes.Name).Value;
+      var account = accountService.FindByUsername(username);
+      var requests = requestService.FilterRequest(fromDate, toDate, priorityId, role, account.Id);
 
 
       return new JsonResult(requests);
@@ -103,8 +106,6 @@ namespace TestNetMVC.Controllers
 
       var skipItem = (page - 1) * pageSize;
       var requests = requestService.GetRequestPaginate(userId, skipItem, pageSize);
-
-
       var totalItems = requestService.GetTotalRequestCount(userId);
       var totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
       return new JsonResult(new { requests, totalItems, totalPages });

@@ -1,17 +1,16 @@
 @using TestNetMVC.Services
 @inject PriorityService PriorityService
-@model TestNetMVC.Models.Request
 
 
 
 <div class="input-group-prepend">
   <label class="input-group-text" for="inputGroupSelect01">Priority</label>
 
-  <select class="custom-select" id="inputGroupSelect01" asp-for="@Model.PriorityId">
-    <option value="-1" selected>Choose Priority</option>
+  <select class="custom-select" id="inputGroupSelect01" name="PriorityId">
+    <!option value="-1" selected>Choose Priority</!option>
     @foreach (var pri in PriorityService.FindAll())
     {
-      <option value="@pri.Id">@pri.PriorityName</option>
+      <!option value="@pri.Id">@pri.PriorityName</!option>
     }
   </select>
 </div>

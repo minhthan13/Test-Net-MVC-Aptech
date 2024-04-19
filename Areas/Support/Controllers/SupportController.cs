@@ -31,23 +31,13 @@ namespace TestNetMVC.Areas.Support.Controllers
     {
       return ViewComponent("Welcome");
     }
-
-
-    [Route("SupportRequest/{page?}")]
-    public IActionResult ListSupportRequest(int? page)
+    [Route("Information/{username}")]
+    public IActionResult Information(string username)
     {
-      if (page == null)
-      {
-        page = 1;
-      }
-      var username = User.FindFirst(ClaimTypes.Name).Value;
-      var roleName = User.FindFirst(ClaimTypes.Role).Value;
-      var user = accountService.FindByUsername(username);
-      return ViewComponent("ListRequest", new { EmployeeId = user.Id, roleName, page });
+
+      return ViewComponent("Information", username);
     }
-
-
-    [Route("RequestsPaginate")]
+    [Route("Requests")]
     public IActionResult RequestsPaginate()
     {
       var username = User.FindFirst(ClaimTypes.Name).Value;

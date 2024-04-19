@@ -28,6 +28,7 @@ public partial class TestnetmvcContext : DbContext
     modelBuilder.Entity<Employee>(entity =>
     {
       entity.HasKey(e => e.Id).HasName("PK_nhanvien_1");
+      entity.HasIndex(e => e.Username).HasName("IX_Employees_Username");
     });
 
     modelBuilder.Entity<Request>(entity =>
@@ -62,12 +63,12 @@ public partial class TestnetmvcContext : DbContext
                       .HasConstraintName("FK_EmployeeRole_Role"),
                   j =>
                   {
-                  j.HasKey("RoleId", "EmployeeId").HasName("PK_EmployeeRole_RoleId");
-                  j.ToTable("EmployeeRole");
-                  j.HasIndex(new[] { "EmployeeId", "RoleId" }, "IX_EmployeeRole");
-                  j.IndexerProperty<int>("RoleId").HasColumnName("roleId");
-                  j.IndexerProperty<int>("EmployeeId").HasColumnName("employeeId");
-                });
+                    j.HasKey("RoleId", "EmployeeId").HasName("PK_EmployeeRole_RoleId");
+                    j.ToTable("EmployeeRole");
+                    j.HasIndex(new[] { "EmployeeId", "RoleId" }, "IX_EmployeeRole");
+                    j.IndexerProperty<int>("RoleId").HasColumnName("roleId");
+                    j.IndexerProperty<int>("EmployeeId").HasColumnName("employeeId");
+                  });
     });
 
     OnModelCreatingPartial(modelBuilder);

@@ -42,46 +42,35 @@ namespace TestNetMVC.Areas.Employees.Controllers
       return ViewComponent("Information", username);
     }
 
-
-    [Route("EmployeesRequest")]
-    [Route("EmployeesRequest/{page?}")]
-    public IActionResult EmployeesRequest(int? page)
-    {
-      if (page == null)
-      {
-        page = 1;
-      }
-      var username = User.FindFirst(ClaimTypes.Name).Value;
-      var roleName = User.FindFirst(ClaimTypes.Role).Value;
-      var user = accountService.FindByUsername(username);
-      return ViewComponent("ListRequest", new { EmployeeId = user.Id, roleName, page });
-    }
-
-
-    [HttpPost]
-    [Route("AddNewRequest")]
-    public IActionResult AddNewRequest(Request request)
-    {
-      request.SentDate = DateTime.Now;
-      if (requestService.AddNewRequest(request))
-      {
-        notyf.Success("Add New Request Success !!!");
-        return RedirectToAction("EmployeesRequest");
-      }
-      else
-      {
-        notyf.Error("Add New Request Failed !!!");
-        return RedirectToAction("EmployeesRequest");
-      }
-    }
-
-
-    [Route("RequestsPaginate")]
+    [Route("Requests")]
     public IActionResult RequestsPaginate()
     {
       var username = User.FindFirst(ClaimTypes.Name).Value;
       return ViewComponent("RequestPaginate", new { username });
 
     }
+
+
+
+    [HttpPost]
+    [Route("AddNewRequest")]
+    public IActionResult AddNewRequest(Request request, int PriorityId)
+    {
+      request.SentDate = DateTime.Now;
+      request.PriorityId = PriorityId;
+      if (requestService.AddNewRequest(request))
+      {
+        notyf.Success("Add New Request Success !!!");
+        return RedirectToAction("Requests");
+      }
+      else
+      {
+        notyf.Error("Add New Request Failed !!!");
+        return RedirectToAction("Requests");
+      }
+    }
+
+
+
   }
 }

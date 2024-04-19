@@ -126,32 +126,12 @@
           <li class="nav-item d-none d-sm-inline-block">
             <a asp-controller="@roleController" asp-action="Employees" class="nav-link">Employees</a>
           </li>
-
-          <li class="nav-item d-none d-sm-inline-block">
-            <a asp-controller="@roleController" asp-action="Requests" class="nav-link">Requests</a>
-          </li>
         }
-        @if (rolename == "Staff")
-        {
-
-          <li class="nav-item d-none d-sm-inline-block">
-            <a asp-controller="@roleController" asp-action="EmployeesRequest" class="nav-link">Requests</a>
-          </li>
-        }
-
-        @if (rolename.Contains("Support Staff"))
-        {
-
-          <li class="nav-item d-none d-sm-inline-block">
-            <a asp-controller="@roleController" asp-action="SupportRequest" class="nav-link">My
-              Requests</a>
-          </li>
-        }
-
         <li class="nav-item d-none d-sm-inline-block">
-          <a asp-controller="@roleController" asp-action="RequestsPaginate" class="nav-link">
-            Requests Paginate</a>
+          <a asp-action="Requests" class="nav-link">Requests</a>
         </li>
+
+
 
       </ul>
 
@@ -169,7 +149,7 @@
     <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
       <!-- Brand Logo -->
-      <a asp-controller="@roleController" asp-area="@roleArea" asp-action="Welcome" class="brand-link">
+      <a asp-action="Welcome" class="brand-link">
         <img src="~/images/ASP.png" alt="MVC Logo" class="brand-image img-circle elevation-3" style="opacity: 0.8" />
         <span class="brand-text font-weight-light">Net MVC</span>
       </a>
@@ -183,8 +163,7 @@
             <img src="~/images/@account.Photo" class="img-circle elevation-2" alt="User Image" />
           </div>
           <div class="info">
-            <a asp-area="@roleArea" asp-controller="@roleController" asp-action="Information"
-              asp-route-username="@username" class="d-block">
+            <a asp-action="Information" asp-route-username="@username" class="d-block">
               @account.Fullname.ToUpper()
             </a>
           </div>
@@ -193,8 +172,8 @@
         <!-- Sidebar Menu -->
         <nav class="mt-2">
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-            <li class="nav-item menu-open">
-              <a asp-controller="@roleController" asp-area="@roleArea" asp-action="Dashboard" class="nav-link">
+            <li class="nav-item menu-open @(rolename !="Admin"? "d-none":"")">
+              <a asp-action="Dashboard" class="nav-link">
                 <i class="nav-icon fas fa-tachometer-alt"></i>
                 <p>
                   Dashboard
@@ -216,39 +195,20 @@
                 {
 
                   <li class="nav-item">
-                    <a asp-controller="@roleController" asp-action="Employees" class="nav-link ">
+                    <a asp-action="Employees" class="nav-link ">
                       <i class="far fa-circle nav-icon"></i>
                       <p>Employees</p>
                     </a>
                   </li>
-                  <li class="nav-item">
-                    <a asp-controller="@roleController" asp-action="Requests" asp-route-page=@(1) class="nav-link">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>Requests</p>
-                    </a>
-                  </li>
-                }
 
-                @if (rolename == "Staff")
-                {
-                  <li class="nav-item">
-                    <a asp-controller="@roleController" asp-action="EmployeesRequest" asp-route-page=@(1)
-                      class="nav-link">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>Requests</p>
-                    </a>
-                  </li>
                 }
+                <li class="nav-item">
+                  <a asp-action="Requests" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Requests</p>
+                  </a>
+                </li>
 
-                @if (rolename.Contains("Support Staff"))
-                {
-                  <li class="nav-item">
-                    <a asp-controller="@roleController" asp-action="SupportRequest" asp-route-page=@(1) class="nav-link">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>My Requests</p>
-                    </a>
-                  </li>
-                }
 
               </ul>
             </li>

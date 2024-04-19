@@ -58,11 +58,11 @@ public class HomeController : Controller
       switch (roleName)
       {
         case "Admin":
-          return RedirectToAction("Dashboard", "Admin", new { area = "Admin" });
+          return RedirectToAction("Dashboard", "Admin");
         case "Staff":
-          return RedirectToAction("Welcome", "Employees", new { area = "Employees" });
+          return RedirectToAction("Welcome", "Employees");
         case "Support Staff":
-          return RedirectToAction("Welcome", "Support", new { area = "Support" });
+          return RedirectToAction("Welcome", "Support");
         default:
           return RedirectToAction("Welcome");
       }
@@ -108,7 +108,23 @@ public class HomeController : Controller
     {
       notyf.Error("Change Account Failed !!!");
     }
-    return ViewComponent("Welcome");
+
+
+    var controlerName = "";
+    switch (User.FindFirst(ClaimTypes.Role).Value)
+    {
+      case "Admin":
+        controlerName = "Admin";
+        break;
+      case "Staff":
+        controlerName = "Employees";
+        break;
+      case "Support Staff":
+        controlerName = "Support";
+        break;
+
+    }
+    return RedirectToAction("Information", controlerName, new { area = controlerName, username = account.Username });
   }
 
   [Route("logout")]
