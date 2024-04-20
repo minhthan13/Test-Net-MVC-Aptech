@@ -68,14 +68,22 @@ namespace TestNetMVC.Areas.Admin.Controllers
     }
     [HttpPost]
     [Route("AddNewEmployee")]
-    public IActionResult AddNewEmployee(Employee employee, int RoleId, IFormFile Photo)
+    public IActionResult AddNewEmployee(Employee employee, int RoleId, IFormFile? Photo)
     {
-      var fileName = FileHelper.generateFileName(Photo.FileName);
-      var path = Path.Combine(environment.WebRootPath, "images", fileName);
-      using (var fileStream = new FileStream(path, FileMode.Create))
+      string fileName = "default-profile.png";
+
+      if (Photo != null)
       {
-        Photo.CopyTo(fileStream);
-      };
+        fileName = FileHelper.generateFileName(Photo.FileName);
+        var path = Path.Combine(environment.WebRootPath, "images", fileName);
+        using (var fileStream = new FileStream(path, FileMode.Create))
+        {
+          Photo.CopyTo(fileStream);
+        };
+
+
+      }
+
       employee.Dob = DateTime.Now;
       employee.Password = BCrypt.Net.BCrypt.HashPassword(employee.Password);
       employee.Status = false;

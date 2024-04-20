@@ -71,6 +71,30 @@ namespace TestNetMVC.Areas.Employees.Controllers
     }
 
 
+    [HttpPost]
+    [Route("ChangePassword")]
+    public IActionResult ChangePassword(string username, string oPassword, string nPassword)
+    {
+      var account = accountService.FindByUsername(username);
+      if (BCrypt.Net.BCrypt.Verify(oPassword, account.Password))
+      {
+        account.Password = BCrypt.Net.BCrypt.HashPassword(nPassword);
+        if (accountService.EditAccount(account))
+        {
+          notyf.Success("Change Password Success !!!");
+          return RedirectToAction("Information", new { username });
+        }
+        else
+        {
+          notyf.Error("Change Password Failed");
+          return RedirectToAction("Information", new { username });
+        }
+      }
+
+      return RedirectToAction("Information", new { username });
+    }
+
+
 
   }
 }

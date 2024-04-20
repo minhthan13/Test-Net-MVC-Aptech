@@ -55,14 +55,14 @@ namespace TestNetMVC.Controllers
       var accounts = accountService.FindAll2();
       if (accountService.ActiveAcount(username, isChecked))
       {
-        message = "Change Status Success !!";
+        message = $"Change Status For Account {username} Success !!";
         notyf.Success(message);
 
       }
       else
       {
-        message = "Change Status Failed !!!";
-        notyf.Success(message);
+        message = $"Change Status For Account {username} Failed !!";
+        notyf.Error(message);
       }
 
       return new JsonResult(new { accounts, message });

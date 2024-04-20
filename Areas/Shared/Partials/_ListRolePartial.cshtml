@@ -7,7 +7,7 @@
 <div class="input-group-prepend">
   <label class="input-group-text" for="inputGroupSelect01">Role</label>
 
-  <select class="custom-select" id="inputGroupSelect01" name="RoleId">
+  <select class="custom-select" name="RoleId" id="SelectRole">
     <option value="-1" selected>Choose Role</option>
     @foreach (var role in RoleService.FindAll().Where(r => r.RoleName != "Admin"))
     {
@@ -15,3 +15,4 @@
     }
   </select>
 </div>
+<span id="MessRole" class="text-danger"></span>

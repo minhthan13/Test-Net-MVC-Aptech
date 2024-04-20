@@ -3,19 +3,23 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace TestNetMVC.Models;
-
+[BindProperties]
 public partial class Employee
 {
   [Key]
   public int Id { get; set; }
 
   [StringLength(250)]
+
   public string Username { get; set; } = null!;
 
   [StringLength(250)]
+
+
   public string Password { get; set; } = null!;
 
   [StringLength(250)]
@@ -27,7 +31,7 @@ public partial class Employee
   public bool Status { get; set; }
 
   [StringLength(250)]
-  public string? Photo { get; set; }
+  public string? Photo { get; set; } = "Default.jpg";
 
 
   [InverseProperty("EmployeeIdHandlingNavigation")]
@@ -39,7 +43,6 @@ public partial class Employee
 
   public virtual ICollection<Request> RequestEmployeeIdSubmitNavigations { get; set; } = new List<Request>();
 
-  [JsonIgnore]
   [ForeignKey("EmployeeId")]
   [InverseProperty("Employees")]
 

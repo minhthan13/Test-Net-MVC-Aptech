@@ -109,7 +109,7 @@
 
 
 
-<!--MODAL-->
+<!--MODAL Change Password-->
 
 
 <div class="modal fade " id="ChangePassword" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -122,26 +122,31 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form method="post" asp-controller="@roleController" asp-action="ChangePassword">
+      <form method="post" asp-controller="@roleController" asp-action="ChangePassword" id="FormChangePassword">
         <div class="modal-body">
           <div class="d-flex row justify-content-center">
             <div class="form-group col-10">
               <label for="OPassword">Old Password</label>
               <input type="password" class="form-control" id="OPassword" name="oPassword">
+              <span class="text-danger" id="messOPass"></span>
             </div>
             <div class="form-group col-10">
               <label for="NPassword">Created New Password</label>
               <input type="password" class="form-control" id="NPassword" name="nPassword">
+              <span class="text-danger" id="messNPass"></span>
+
             </div>
             <div class="form-group col-10">
               <label for="CNPassword">Confirm New Password</label>
               <input type="password" class="form-control" id="CNPassword">
+              <span class="text-danger" id="messCPass"></span>
+
             </div>
           </div>
           <input type="hidden" value="@username" name="username">
         </div>
         <div class="modal-footer">
-          <button type="submit" class="btn btn-info">Save changes</button>
+          <button type="button" id="btnSaveChanges" class="btn btn-info">Save changes</button>
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         </div>
       </form>
@@ -167,4 +172,50 @@
       input.files = fileUpload;
     }
   }
+
+
+  $('#btnSaveChanges').on('click', function () {
+    if (VadilationCustom()) {
+
+      $('#FormChangePassword').submit();
+    }
+  });
+
+
+  function VadilationCustom() {
+    let OldPassword = $('#OPassword').val();
+    let NewPassword = $('#NPassword').val();
+    let ConformPassword = $('#CNPassword').val();
+
+
+    let isValid = true;
+
+
+    if (OldPassword == '') {
+      $('span#messOPass').text('Please Enter Old Password !!');
+      isValid = false;
+    } else {
+      $('span#messOPass').text('');
+    }
+
+    if (NewPassword == '') {
+      $('span#messNPass').text('Please Enter New Password !!');
+      isValid = false;
+    } else {
+      $('span#messNPass').text('');
+    }
+
+    if (ConformPassword == '') {
+      $('span#messCPass').text('Please Enter Confirm Password !!');
+      isValid = false;
+    } else if (ConformPassword != NewPassword) {
+      $('span#messCPass').text('Confirm Password does not match !!');
+      isValid = false;
+    } else {
+      $('span#messCPass').text('');
+    }
+
+
+    return isValid;
+  };
 </script>

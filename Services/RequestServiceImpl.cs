@@ -154,6 +154,7 @@ namespace TestNetMVC.Services
       // Trả về danh sách các yêu cầu đã được lọc
       return resRequests.Select(r => new
       {
+        id = r.Id,
         title = r.Title,
         sentDate = r.SentDate.ToString("dd-MM-yyyy"),
         priorityName = r.Priority.PriorityName,
@@ -185,6 +186,7 @@ namespace TestNetMVC.Services
       }
       return resRequests.Select(r => new
       {
+        id = r.Id,
         title = r.Title,
         sentDate = r.SentDate.ToString("dd-MM-yyyy"),
         priorityName = r.Priority.PriorityName,

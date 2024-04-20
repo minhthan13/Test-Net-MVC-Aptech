@@ -14,9 +14,11 @@ public partial class Request
   public int Id { get; set; }
 
   [StringLength(255)]
+  [Required]
   public string Title { get; set; } = null!;
 
   [StringLength(255)]
+  [Required]
   public string Description { get; set; }
 
   public DateTime SentDate { get; set; }

@@ -11,13 +11,15 @@
         </button>
       </div>
       <form method="post" asp-area="Admin" asp-controller="Admin" asp-action="AddNewEmployee"
-        enctype="multipart/form-data">
+        enctype="multipart/form-data" id="formAddEmployee">
         <div class="container-fluid">
           <div class="modal-body row d-flex justify-content-between">
             <div class="form-group col-5">
-
               <label for="username">Username:<span class="text-danger">*</span></label>
               <input type="text" class="form-control" id="username" placeholder="Username" asp-for="Username">
+              <span id="MessUsername" class="text-danger"></span>
+
+
             </div>
             <div class="form-group col-5">
               <label></label>
@@ -29,6 +31,8 @@
             <div class="form-group col-5">
               <label for="password">Password:<span class="text-danger">*</span></label>
               <input type="password" class="form-control" id="password" placeholder="Password" asp-for="Password">
+              <span id="MessPassword" class="text-danger"></span>
+
             </div>
 
 
@@ -41,6 +45,9 @@
               <label for="Cpassword">Confirm Password:<span class="text-danger">*</span></label>
               <input type="password" class="form-control" id="Cpassword" placeholder="Confirm Password"
                 name="CPassword">
+
+              <span id="MessCPassword" class="text-danger"></span>
+
             </div>
             <div class="form-group col-5 align-content-end">
               <span>Photo</span>
@@ -67,7 +74,7 @@
 
           </div>
           <div class="modal-footer col-12">
-            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-primary" id="btnSave">Save</button>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
           </div>
         </div>
@@ -96,5 +103,61 @@
   }
   $(document).ready(function () {
     $('#Birthday').datepicker({ dateFormat: "dd/mm/yy" });
+
+    $('#btnSave').on("click", function () {
+      if (VadilationCustom()) {
+        $('#formAddEmployee').submit();
+      }
+
+
+
+
+
+    });
   });
+
+
+  function VadilationCustom() {
+    let iUsername = $('#username').val();
+    let iPassword = $('#password').val();
+    let iCPassword = $('#Cpassword').val();
+    let iRole = $('#SelectRole').val();
+
+    let isValid = true;
+
+    if (iUsername == '') {
+      $('span#MessUsername').text('Please Enter Username !!');
+      isValid = false;
+    } else {
+      $('span#MessUsername').text('');
+    }
+
+    if (iPassword == '') {
+      $('span#MessPassword').text('Please Enter Password !!');
+      isValid = false;
+    } else {
+      $('span#MessPassword').text('');
+    }
+
+    if (iCPassword == '') {
+      $('span#MessCPassword').text('Please Enter Confrim Password !!');
+      isValid = false;
+    } else if (iCPassword != iPassword) {
+      $('span#MessCPassword').text('Confirm Password does not match !!');
+      isValid = false;
+    } else {
+      $('span#MessCPassword').text('');
+    }
+
+
+    if (iRole == "-1") {
+      $('span#MessRole').text('Please Choose Role Employee !!');
+      isValid = false;
+    } else {
+      $('span#MessRole').text('');
+    }
+
+    return isValid;
+  };
+
 </script>

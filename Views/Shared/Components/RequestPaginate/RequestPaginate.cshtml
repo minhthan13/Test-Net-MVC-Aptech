@@ -11,52 +11,50 @@
 <input type="hidden" value="@userId" id="userId">
 <input type="hidden" value="@userName" id="userName">
 <input type="hidden" value="@userRole" id="userRole">
+@* <script>
+$(document).ready(function () {
+let userId = $('#userId').val();
+let roleUser = $('userRole').val();
+$.ajax({
+type: "GET",
+url: "/ajax/getRequestPaginate",
+data: { userId },
+success: function (res) {
+fillToTable(res, roleUser);
+}
+});
+});
+
+
+function fillToTable(lists, roleUser) {
+let s = "";
+for (var i = 0; i < lists.length; i++) {
+s += `
+<tr>
+<td><strong>${i + 1}</strong></td>
+<td>${lists[i].title}</td>
+<td>${lists[i].sentDate}</td>
+<td>${lists[i].priorityName}</td>`;
+
+if (roleUser != "Support Staff") {
+s += `<td><strong>${lists[i].handler}</strong></td>`;
+}
+
+if (roleUser != "Staff") {
+s += `<td><i>${lists[i].sender}</i></td>`;
+}
+
+s += `<td>${lists[i].description}</td>
+</tr>`;
+}
+// end loop
+$('#tableRequests tbody').html(s);
+};
+
+</script> *@
+
 <script>
   $(document).ready(function () {
-    let userId = $('#userId').val();
-    let roleUser = $('userRole').val();
-    $.ajax({
-      type: "GET",
-      url: "/ajax/getRequestPaginate",
-      data: { userId },
-      success: function (res) {
-        console.log(res);
-        fillToTable(res, roleUser);
-      }
-    });
-  });
-
-
-  function fillToTable(lists, roleUser) {
-    let s = "";
-    for (var i = 0; i < lists.length; i++) {
-      s += `
-      <tr>
-        <td><strong>${i + 1}</strong></td>
-        <td>${lists[i].title}</td>
-        <td>${lists[i].sentDate}</td>
-        <td>${lists[i].priorityName}</td>`;
-
-      if (roleUser != "Support Staff") {
-        s += `<td><strong>${lists[i].handler}</strong></td>`;
-      }
-
-      if (roleUser != "Staff") {
-        s += `<td><i>${lists[i].sender}</i></td>`;
-      }
-
-      s += `<td>${lists[i].description}</td>
-      </tr>`;
-    }
-    // end loop
-    $('#tableRequests tbody').html(s);
-  };
-
-</script>
-
-<script>
-  $(document).ready(function () {
-
     //********* Paginate Logic
     let userId = $('#userId').val();
     let roleUser = $('#userRole').val();
@@ -92,7 +90,11 @@
       });
     });
     //********** filter Logic
+
   });
+
+
+
   // call Request show table Ajax
   function getRequestPaginate(userId, page, pageSize, roleUser) {
     $.ajax({
@@ -100,7 +102,6 @@
       url: "/ajax/getRequestPaginate",
       data: { userId, page, pageSize },
       success: function (res) {
-        console.log(res);
         fillToTable(res.requests, roleUser);
         updatePagination(res.totalPages, page);
 
@@ -113,20 +114,20 @@
     for (var i = 0; i < lists.length; i++) {
       s += `
       <tr>
-        <td><strong>${i + 1}</strong></td>
-        <td>${lists[i].title}</td>
+        <td ><strong>${i + 1}</strong></td>
+        <td style="width:250px;" >${lists[i].title}</td>
         <td>${lists[i].sentDate}</td>
         <td>${lists[i].priorityName}</td>`;
-
       if (roleUser != "Support Staff") {
         s += `<td><strong>${lists[i].handler}</strong></td>`;
       }
-
       if (roleUser != "Staff") {
         s += `<td><i>${lists[i].sender}</i></td>`;
       }
 
-      s += `<td>${lists[i].description}</td>
+      s += `<td style="width: 300px;">
+        <span class="d-inline-block text-truncate" style="width: 300px;" > ${lists[i].description}</span>
+        </td>
       </tr>`;
     }
     // Kết thúc vòng lặp
@@ -140,7 +141,7 @@
 
     if (totalPages > 1) {
       for (let i = 1; i <= totalPages; i++) {
-        pagination.append(`<li class="page-item ${inPageActive == i ? "active" : ""}"><a class="page-link">${i}</a></li>`); // Thêm nút cho mỗi trang
+        pagination.append(`<li class="page-item btn p-1  ${inPageActive == i ? "active" : ""}" ><a class="page-link">${i}</a></li>`); // Thêm nút cho mỗi trang
       }
     }
   }
@@ -148,6 +149,8 @@
 
   //===============
 </script>
+
+
 <div class="container-fluid" id="boxRequest">
   <div id="requestHeader" class="row justify-content-center align-content-center">
     <div class="h1">Requests</div>
@@ -253,5 +256,5 @@
 </div>
 
 <div class="row justify-content-center" id="pangiateRow">
-  <ul class="pagination pagination-lg"></ul>
+  <ul class="pagination pagination-lg mb-0"></ul>
 </div>
