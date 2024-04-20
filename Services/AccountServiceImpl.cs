@@ -26,6 +26,11 @@ namespace TestNetMVC.Services
       return false;
     }
 
+    public bool Exist(string username)
+    {
+      return db.Employees.Count(a => a.Username == username) > 0;
+    }
+
 
     public Employee FindByUsername(string username)
     {

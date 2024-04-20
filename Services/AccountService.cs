@@ -19,5 +19,8 @@ namespace TestNetMVC.Services
     public bool ActiveAcount(string username, bool isChecked);
 
     public bool EditAccount(Employee employee);
+
+    public bool Exist(string username);
+
   }
 }

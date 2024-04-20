@@ -12,8 +12,8 @@
   var employeeSupport = Model.employeeSupport;
 }
 
-<div class="table-responsive  row">
-  <table class="table table-hover table-bordered text-nowrap text-center ">
+<div class="container-fluid">
+  <table class="table table-hover table-bordered text-nowrap text-center  ">
     <thead>
       <tr class="bg-info">
         <th>#</th>
@@ -41,7 +41,9 @@
           <td>@r.Priority.PriorityName</td>
           <td><i><b>@(r.EmployeeIdHandlingNavigation != null ? r.EmployeeIdHandlingNavigation.Username : "none")</b></i>
           </td>
-          <td class="text-break">@r.Description</td>
+          <td style="width:120px;">
+            <span class="d-inline-block text-truncate" style="width: 120px;"> @r.Description</span>
+          </td>
           <td>
             <select class="AjaxSelectSupport custom-select fs-2" data-requestId="@r.Id" style="width: fit-content;">
               <!option value="-1" selected>supporter</!option>

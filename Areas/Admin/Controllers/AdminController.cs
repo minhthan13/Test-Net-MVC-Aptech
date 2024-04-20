@@ -70,6 +70,12 @@ namespace TestNetMVC.Areas.Admin.Controllers
     [Route("AddNewEmployee")]
     public IActionResult AddNewEmployee(Employee employee, int RoleId, IFormFile? Photo)
     {
+      if (accountService.Exist(employee.Username))
+      {
+        notyf.Error("Create account Failled !!!");
+        notyf.Error($"Username \"{employee.Username}\" already exists, Please Try Again.");
+        return RedirectToAction("Employees");
+      }
       string fileName = "default-profile.png";
 
       if (Photo != null)
